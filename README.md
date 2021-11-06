@@ -6,7 +6,7 @@ Puedes modificarlo si gustas, pero me ha tomado tiempo hacerlo, y que funcione t
 
 
 Quieres ponerlo en un bot? Te ayudaré.
-Primero descargas los archivos, puedes usar "git Vickito/Vickito"
+Primero descargas los archivos, puedes usar "git clone git@github.com:Vickito/Vickito.git"
 Luego instalas el mIRC (es la app que puede correr el archivo).
 Luego poner los archivos en la carpeta "scripts/" para que tenga un mejor funcionamiento.
 Luego en el mIRC puedes usar "/load -rs scripts/_ini_.mrc" y "/load -rs scripts/main.mrc"
