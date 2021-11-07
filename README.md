@@ -1,15 +1,30 @@
-### Hi there 👋
+### Hola 👋
 
-Esté es un script diseñado para pasar un buen tiempo en el irc.
+Esté es un script diseñado para jugar en el irc.
 
-Puedes modificarlo si gustas, pero me ha tomado tiempo hacerlo, y que funcione tan bien, solo pido que lo uses con calma de buena forma, por respeto y derecho del autor.
+Puedes modificarlo si gustas.
+Esperó que los disfruten!
+Usarlo con cuidado! 
+Solo pido que lo uses con calma, de buena forma, por respeto y derecho del autor.
+Y nada de plagios!
 
 
-Quieres ponerlo en un bot? Te ayudaré.
-Primero descargas los archivos, puedes usar "git clone https://github.com/Vickito/Koy.git"
-Luego instalas el mIRC (es la app que puede correr el archivo).
-Luego poner los archivos en la carpeta "scripts/" para que tenga un mejor funcionamiento.
-Luego en el mIRC puedes usar "/load -rs scripts/_ini_.mrc" y "/load -rs scripts/main.mrc"
-Luego de haber modificado el archivo, debes poner en el privado de tu bot "/msg $botnick !log in Clave" La clave la puedes cambiar en el archivo.
-O si crees que es mucho, puedes hacer "/auser $tunick 300"
-Luego puedes poner en tu sala "!Juegos enable" para activar los juegos y puedes usar "!Alta" para tener saldo.
+### Quieres ponerlo en un bot? Te ayudaré!
+1) Primero descargas los archivos, puedes usar "git clone https://github.com/Vickito/BotNick.git" desde tu consola o simplemente puedes usar
+2) Instalas el _mIRC/IRCap_ (es la app que puede correr el archivo).
+3) Poner los archivos en la carpeta "scripts/" para que tenga un mejor funcionamiento.
+4) Luego en el mIRC puedes usar "_/load -rs scripts/BotNick.mrc_" y "_/load -rs scripts/BotNick_Main.mrc_"
+
+### Modificar el archivo!
+1) Debes cambiar la parte de "%Pass" para que tenga una clave privada, así solo tú tienes acceso a todas las funciones!
+2) Si gustas, puedes cambiar "%Moneda & %Moneda_2" a tu gusto, puedes ponerle los nombres que quieras, siempre y cuando siga la logica!
+3) También la ruta, si es que quieres poner el archivo en otra carpeta que no sea "scripts/".
+4) Cambia el simbolo de "%prefix", el predestinado es "!".
+
+### Luego de haber modificado el archivo...
+1) Debes poner en el privado de tu bot "/msg botnick !log in Pass", Te recuerdo: La clave la puedes cambiar en el archivo. Si crees que es mucho, puedes hacer "/auser tunick 300" desde el mismo Bot.
+3) Luego puedes poner en tu sala "!Juegos enable" para activar los juegos y puedes usar "!Alta" para tener saldo.
+4) Queda en ti usarlo bien!
+
+### Si no sabes los comandos
+Puedes usar "!Ayuda"
