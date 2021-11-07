@@ -134,7 +134,7 @@ on *:text:*:*: {
       }
       elseif ($2 == f) { .partall | .timer 1 10 $BotNick(ajoin) }
       elseif ($2 == hop) { 
-        if ($nick ison $chan) { .hop -cn $chan  Saltito } 
+        if ($nick ison $chan) { .hop -cn $chan Saltito } 
         else {
           if ($2 != $null) { .hop -cn #$2 Saltito }
           else { .msg $nick Especifica una sala para hacer hop.. }
