@@ -10,7 +10,7 @@ Y nada de plagios!
 
 
 ### Quieres ponerlo en un bot? Te ayudaré!
-1) Primero descargas los archivos, puedes usar "git clone https://github.com/Vickito/BotNick.git" desde tu consola o simplemente puedes usar
+1) Primero descargas los archivos, puedes usar "git clone https://github.com/Vickito/BotNick.git" desde tu consola o simplemente puedes usar este link "https://github.com/Vickito/BotNick/archive/refs/heads/main.zip"
 2) Instalas el _mIRC/IRCap_ (es la app que puede correr el archivo).
 3) Poner los archivos en la carpeta "scripts/" para que tenga un mejor funcionamiento.
 4) Luego en el mIRC puedes usar "_/load -rs scripts/BotNick.mrc_" y "_/load -rs scripts/BotNick_Main.mrc_"
