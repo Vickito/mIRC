@@ -10,7 +10,7 @@
 alias -l BotNick {
   .set %file $+(scripts\Juego\,$network,\)
   .set %ajoin $+(%file,ajoin.txt)
-  .set %pass Nosoynadie
+  .set %pass Pass
   .set %prefix !
 
   if ($1 == BotNick) { 
