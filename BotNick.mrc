@@ -7,13 +7,13 @@
 * Ahí se manejara todos los comandos para los juegos.
 */
 
-alias -l unu {
-  .set %unu $+(scripts\Juego\,$network,\)
-  .set %ajoin $+(%unu,ajoin.txt)
+alias -l BotNick {
+  .set %file $+(scripts\Juego\,$network,\)
+  .set %ajoin $+(%file,ajoin.txt)
   .set %pass Nosoynadie
   .set %prefix !
 
-  if ($1 == unu) { 
+  if ($1 == BotNick) { 
     .load -rs scripts\ $+ $nopath($script)
   } 
 
@@ -36,27 +36,23 @@ alias -l unu {
   }
 }
 On *:start: {
-  .echo -s [******] 13u07n10u [******] [15|08|2020]
-  if (%Aviso_unu != $null) { 
-    .msg %Aviso_unu Archivo $nopath($script) cargado correctamente!
-    .unset %Aviso_unu
+  .echo -s [******] 13Bo07tNi10ck [******] [15|08|2020]
+  if (%Aviso_BotNick != $null) { 
+    .msg %Aviso_BotNick *10Archivo* $remove($nopath($script),.mrc) cargado correctamente!
+    .unset %Aviso_BotNick
   }
 }
 On 1:connect: { 
-  if (Chateamos isin $network) { 
-    .ghost Proteo:OtorrinoKoy 
-    .nick Proteo:OtorrinoKoy 
-    .timer 1 5 .mode Proteo +Rn 
-  } 
-  else { .nick unu }
-  $unu(ajoin) 
+  if (irc isin $network) { /nick BotNick } 
+  else { .nick BotNick }
+  $BotNick(ajoin) 
 }
 On 1:disconnect: { 
   if ($nick == $me) { 
-    .mnick unu
-    .Identd on unu 
+    .mnick BotNick
+    .Identd on BotNick 
     .Partall 
-    .Fullname unu12© 1420201-142021
+    .Fullname BotNick12© 1420201-142021
     if (%Server != $null) {
       .set %Server_irc $replace($server,Terra,irc,Apolo,irc,saturno,irc,jupiter,irc,neptuno,irc,deep,irc)
       .server -z %Server_irc 
@@ -65,7 +61,7 @@ On 1:disconnect: {
   } 
 }
 On *:invite:#: { 
-  .unu 
+  .BotNick 
   if ($level($nick) >= 300) { 
     .join -n $chan 
     .msg $chan Holis $nick :* 
@@ -80,7 +76,7 @@ On *:invite:#: {
 
   else { .halt }
 }
-On 1:JOIN:#: {
+On 1:join:#: {
   if ($readini(%Saldo,+,$chan) != on) { .halt }
   else {  
     if (%nick_ [ $+ [ $nick ] ] == $null) {
@@ -103,13 +99,13 @@ On *:ban:#: {
 }
 on *:text:*:*: {
   if (%nick_ [ $+ [ $nick ] ] != $null) { .halt }
-  if ($1 == %prefix $+ unu) {
+  if ($1 == %prefix $+ BotNick) {
     if ($level($nick) >= 200) || ($readini(%Saldo,$nick,OP) == +) { 
       if ($2 == $null) {
-        if ($nick ison $chan) { .set -u30 %Aviso_unu $chan }
-        else { .set -u30 %Aviso_unu $nick }
+        if ($nick ison $chan) { .set -u30 %Aviso_BotNick $chan }
+        else { .set -u30 %Aviso_BotNick $nick }
         /reseterror 
-        $unu(unu) 
+        $BotNick(BotNick) 
       }
       elseif ($2 == F) { .set %Server ON | /Quit Nos vemos. Quit: $nick }
     } 
@@ -138,13 +134,13 @@ on *:text:*:*: {
         else { .msg $nick $nick No me encuentro en ninguna sala ;). }
       }
 
-      elseif ($2 == lista) { $unu(info, $nick) }
-      elseif ($2 == ajoin) { $unu(ajoin) }
+      elseif ($2 == lista) { $BotNick(info, $nick) }
+      elseif ($2 == ajoin) { $BotNick(ajoin) }
       elseif ($2 == sal) { 
         if ($nick ison $chan) { .part $chan } 
         else { .partall }
       }
-      elseif ($2 == f) { .partall | .timer 1 10 $unu(ajoin) }
+      elseif ($2 == f) { .partall | .timer 1 10 $BotNick(ajoin) }
       elseif ($2 == hop) { 
         if ($nick ison $chan) { .hop -cn $chan 12Saltito } 
         else {
