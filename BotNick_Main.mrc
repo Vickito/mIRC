@@ -7,7 +7,6 @@ alias -l Main {
   /set %Main $+(scripts\Game\,$network,\)
   /set %Saldo $+(%Main,Cuenta.txt) 
   /set %Banco $+(%Main,Banco.txt) 
-  /set %Mod $+(%Main,Mod.txt)
   /set -i %prefix !
 
   if ($1 == Main) { 
@@ -30,7 +29,7 @@ alias -l Main {
   /set -i %Moneda_2_Costo 1000 
   /set -i %Seguro_Costo 5
 
-  if ($1 == Ban) { /msg $3 *Ban* $2 no podes jugar. Si crees que es un error ponte en contacto con un moderador. Usa !Mod. }
+  if ($1 == Ban) { /msg $3 *Ban* $2 no podes jugar. Si crees que es un error ponte en contacto con un moderador. }
 
   ;$1 es para el nick
   if ($1 == Reg) { 
