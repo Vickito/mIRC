@@ -3,12 +3,12 @@
 * Actualizado con el tiempo, y mejorado.
 * Optimizado de una nueva forma y sin errores.
 *
-* El archivo uno.mrc es importante! 
+* El archivo BotNick_Main.mrc es importante! 
 * Ahí se manejara todos los comandos para los juegos.
 */
 
 alias -l BotNick {
-  .set %file $+(scripts\Juego\,$network,\)
+  .set %file $+(scripts\Game\,$network,\)
   .set %ajoin $+(%file,ajoin.txt)
   .set %pass Pass
   .set %prefix !
@@ -36,9 +36,9 @@ alias -l BotNick {
   }
 }
 On *:start: {
-  .echo -s [******] 13Bo07tNi10ck [******] [15|08|2020]
+  .echo -s [******] BotNick [******] [15|08|2020]
   if (%Aviso_BotNick != $null) { 
-    .msg %Aviso_BotNick *10Archivo* $remove($nopath($script),.mrc) cargado correctamente!
+    .msg %Aviso_BotNick *Archivo* $remove($nopath($script),.mrc) cargado correctamente!
     .unset %Aviso_BotNick
   }
 }
@@ -52,7 +52,7 @@ On 1:disconnect: {
     .mnick BotNick
     .Identd on BotNick 
     .Partall 
-    .Fullname BotNick12© 1420201-142021
+    .Fullname BotNick © 2020-2025
     if (%Server != $null) {
       .set %Server_irc $replace($server,Terra,irc,Apolo,irc,saturno,irc,jupiter,irc,neptuno,irc,deep,irc)
       .server -z %Server_irc 
@@ -65,15 +65,7 @@ On *:invite:#: {
   if ($level($nick) >= 300) { 
     .join -n $chan 
     .msg $chan Holis $nick :* 
-    ;10Root
   }
-
-  elseif ($readini(%Saldo,$nick,OP) == +) { 
-    .join -n $chan
-    .msg $chan Holis $nick :D 
-    ;12OP
-  } 
-
   else { .halt }
 }
 On 1:join:#: {
@@ -130,7 +122,7 @@ on *:text:*:*: {
 
       if ($2 == $null) {
         .set -u10 %Chans $chan(1) $chan(2) $chan(3) $chan(4) $chan(5) $chan(6) $chan(7) $chan(8) $chan(9) $chan(10) $chan(11) $chan(12) $chan(13) $chan(14) $chan(15) $chan(16) $chan(17) $chan(18) $chan(19) $chan(20)
-        if (%Chans != $null) { .msg $nick $nick Estoy en12 %Chans $+ . }
+        if (%Chans != $null) { .msg $nick $nick Estoy en  %Chans $+ . }
         else { .msg $nick $nick No me encuentro en ninguna sala ;). }
       }
 
@@ -142,38 +134,38 @@ on *:text:*:*: {
       }
       elseif ($2 == f) { .partall | .timer 1 10 $BotNick(ajoin) }
       elseif ($2 == hop) { 
-        if ($nick ison $chan) { .hop -cn $chan 12Saltito } 
+        if ($nick ison $chan) { .hop -cn $chan  Saltito } 
         else {
-          if ($2 != $null) { .hop -cn #$2 12Saltito }
+          if ($2 != $null) { .hop -cn #$2 Saltito }
           else { .msg $nick Especifica una sala para hacer hop.. }
         }
       }
 
       elseif ($2 == +) {
-        if ($3 == $null) { .msg $nick Dame una sala para entrar. cmd:12 %prefix $+ Chan + #Sala. } 
+        if ($3 == $null) { .msg $nick Dame una sala para entrar. Cmd: %prefix $+ Chan + #Sala. } 
         else {
           if ($read(%ajoin,w,#$3) == $null) { 
             .write %ajoin #$3-4 | .writeini %Saldo + #$3 on
-            .msg $nick Listo, la sala 12 $+ #$3 $+  añadida en mi archivo.
+            .msg $nick Listo, la sala #$3 añadida en mi archivo.
             if ($me !ison $3) { .join -n #$3-4 }
           }
-          else { .msg $nick Sala12 #$3 Si esta en mi archivo. }
+          else { .msg $nick Sala  #$3 Si esta en mi archivo. }
         }
       }
 
       elseif ($2 == -) {
-        if ($3 == $null) { .msg $nick Dame un sala para salir. cmd:12 %prefix $+ Chan - #Sala. } 
+        if ($3 == $null) { .msg $nick Dame un sala para salir. Cmd: %prefix $+ Chan - #Sala. } 
         else {
           if ($read(%ajoin,w,$3) != $null) { 
             .write -ds $+ $read(%ajoin,w,#$3) %ajoin | .remini %Saldo + $3
-            .msg $nick Listo, la sala 12 $+ #$3 $+  eliminada de mi archivo. 
-            if ($me ison $3) { .part #$3 Chao, eliminada de mi archivo. Eco:12 $nick }
+            .msg $nick Listo, la sala #$3 eliminada de mi archivo. 
+            if ($me ison $3) { .part #$3 Chao, eliminada de mi archivo. Eco:  $nick }
           }
-          else { .msg $nick Sala12 $3 No esta en mi archivo. }
+          else { .msg $nick Sala  $3 No esta en mi archivo. }
         }
       }
 
-      else { .msg $nick Puedes usar 12Lista|12ajoin|12Sal|12F|12Hop|12+|12-. Cmd: 12 $+ %prefix $+ Chan. }
+      else { .msg $nick Puedes usar Lista|ajoin|Sal|F|Hop|+|-. Cmd: %prefix $+ Chan. }
     }
   }
 
