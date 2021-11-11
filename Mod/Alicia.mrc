@@ -32,22 +32,22 @@ alias -l Alicia {
   ;Este es el autojoin, es un mecanismo para hacer que el bot entré solo a sus canales.
   ;Te recomiendo no jugar con está parte, es algo delicada.
   elseif ($1 == AutoJoin) {
-    .inc -u300 %ajoin_lineas 1
+    /inc -u300 %ajoin_lineas 1
     while (%ajoin_lineas <= $lines(%ajoin)) {
       if (%ajoin_segundos == $null) { /set -u60 %ajoin_segundos 5 }
       if ($me !ison $read(%ajoin,%ajoin_lineas)) { 
-        .timer 1 %ajoin_segundos /join -n $read(%ajoin,%ajoin_lineas) 
+        /timer 1 %ajoin_segundos /join -n $read(%ajoin,%ajoin_lineas) 
         /set -u60 %ajoin_segundos $calc((%ajoin_segundos) + 5) 
       }
-      .inc %ajoin_lineas
+      /inc %ajoin_lineas
     }
     .unset %ajoin_*
   }
 
   ;Es para la lista del autojoin, te dirá todas las salas que tengas ahí, o si no tienes alguna.
   elseif ($1 == Lista) {
-    if ($exists(%ajoin) == $true) { .msg $2 AutoJoin: | .play $2 %ajoin 1500 }
-    else { .msg $2 Lista de AutoJoin No existe... }
+    if ($exists(%ajoin) == $true) { /msg $2 AutoJoin: | .play $2 %ajoin 1500 }
+    else { /msg $2 Lista de AutoJoin No existe... }
   }
 }
 
@@ -81,7 +81,7 @@ on *:text:*:*: {
       if ($2 == lista) { $Alicia(Lista, $nick) }
       elseif ($2 == ajoin) { $Alicia(AutoJoin) }
       elseif ($2 == add) {
-        if ($3 == $null) { .msg $nick Dame una sala para entrar. } 
+        if ($3 == $null) { /msg $nick Dame una sala para entrar. } 
         else {
           if ($read(%ajoin,w,#$3) == $null) { 
             /write %ajoin #$3-4 
@@ -92,17 +92,17 @@ on *:text:*:*: {
         }
       }
       elseif ($2 == Del) {
-        if ($3 == $null) { .msg $nick Dame una sala para entrar. } 
+        if ($3 == $null) { /msg $nick Dame una sala para entrar. } 
         else {
           if ($read(%ajoin,w,#$3) != $null) { 
             .write -ds $+ $read(%ajoin,w,#$3) %ajoin
-            .msg $nick Listo, la sala12 #$3 eliminada de mi archivo. 
+            /msg $nick Listo, la sala12 #$3 eliminada de mi archivo. 
             if ($me ison $3) { /part #$3 Chao, eliminada de mi archivo. }
           }
-          else { .msg $nick Sala12 #$3 No esta en mi archivo. }
+          else { /msg $nick Sala12 #$3 No esta en mi archivo. }
         }
       }
-      else { .msg $nick Puedes usar 12Lista/12ajoin/12Add/12Del. }
+      else { /msg $nick Puedes usar 12Lista/12ajoin/12Add/12Del. }
       /halt
     }
 
@@ -115,7 +115,19 @@ on *:text:*:#: {
       /set -u4 %Nivel $+ $address($nick,2) ^
 
       if ($1 == !Ayuda) {
-
+        if (%Ay1 [ $+ [ $nick ] ] != $null) { /halt } 
+        else { 
+          /inc -z %Ay1 $+ $nick 30
+          /inc %Ay2 | /timer 1 %Ay2 /msg $nick Ayuda
+          /inc %Ay2 | /timer 1 %Ay2 /msg $nick !Invi nick (Para invitar a la sala). !Nivel (Para saber tu nivel). !Op (Para dar(te) @). !Deop (Para quitar(te) @). !Kick nick motivo (Para expulsar, el motivo es opcional). !Ban nick (Banear a un user que ande haciendo cosas que no debe). !UnBan (Para quitar(te) un ban).
+          /inc %Ay2 | /timer 1 %Ay2 /msg $nick !kb nick motivo (Es lo mismo que !Ban y !Kick, solo que juntos. El motivo es opcional).
+          if ($level($nick) >= 5) {
+            /inc %Ay2 | /timer 1 %Ay2 /msg $nick Root
+            /inc %Ay2 | /timer 1 %Ay2 /msg $nick !Hop (Para hacer un salir y volver a entrar a la sala). !J #sala clave (Para entrar a otra sala, la clave es solo en caso de que la sala sea privada). !P #sala (Para salir de la sala).
+            /inc %Ay2 | /timer 1 %Ay2 /msg $nick !Access o !Acceso (Es para dar poder en tu sala, puedes poner "!Access Add Mod $nick $+ " y el bot te hará caso en los comandos, siempre que entres podrás subir o bajar haciendo !Op y !Deop sin necesidad de CHaN. Además podrás controlarlo sin necesidad de @. Es recomendado para las personas que confias. Además te dará @ al entrar a la sala.)
+          }
+        }
+        /unset %Ay2 | /halt
       }
 
       elseif ($1 == !Invi) {
@@ -129,8 +141,8 @@ on *:text:*:#: {
 
       elseif ($1 == !Nivel) {
         if ($level($nick) >= 5) { /msg $chan Eres 10Root }
-        elseif (ov isin $readini( %Chan, $chan, $nick)) { .msg $chan Eres 12Mod } 
-        elseif (o isincs $readini( %Chan, $chan, $nick)) { .msg $chan Eres 12Voice } 
+        elseif (ov isin $readini( %Chan, $chan, $nick)) { /msg $chan Eres 12Mod } 
+        elseif (o isincs $readini( %Chan, $chan, $nick)) { /msg $chan Eres 12Voice } 
         /halt
       }
 
@@ -220,7 +232,7 @@ on *:text:*:#: {
 
       elseif ($1 == !J) { 
         if ($level($nick) >= 5) {
-          if ($2 == $null) { .msg $chan > !J Chan < } 
+          if ($2 == $null) { /msg $chan > !J Chan < } 
           else { 
             /join -n #$2 $3
             $Alicia( Auto, [JOIN] $nick Hizo $1 #$2 $3) 
@@ -298,7 +310,7 @@ on *:text:*:#: {
   ;Está será la parte para el flood.
   else {
     if ($me isop $chan) {
-      .inc -u4 %Lineas_ $+ $nick 1
+      /inc -u4 %Lineas_ $+ $nick 1
       if (%Lineas_ [ $+ [ $nick ] ] == 2) {
         /msg $chan Aviso 1: $nick porfa no escribas tanto!
         $Alicia( Reg, [Flood] Aviso 1 dado a $nick en $chan)
@@ -333,7 +345,7 @@ On *:deop:#:{
   if ($opnick == $me) && ($nick == $me) { /halt } 
   elseif ($opnick == $me) && ($nick != $me) { 
     if (o isin $usermode) { /mode $chan +ov $me $me }
-    else { .msg chan OP $chan $me }
+    else { /msg chan OP $chan $me }
     $Alicia( Reg, [Deop] me quitaron el @ en $chan por $nick)
   } 
 }
