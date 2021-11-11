@@ -7,7 +7,7 @@
   Puede ser un metodo genial si pasa algo y quieres tener prueba de quién causo lo que esta pasando.
 */
 
-alias -l alicia {
+alias -l Alicia {
   ;Puedes cambiar la ruta si quieres. Pero está sera la predestinada de momento.
   /set %Alicia_File $+(scripts\Datos\) 
 
