@@ -8,11 +8,14 @@ Usarlo con cuidado!
 Solo pido que lo uses con calma, de buena forma, por respeto y derecho del autor.
 Y nada de plagios!
 #
-### Quieres ponerlo en un bot? Te ayudaré!
+### Cómo puedo ponerlo en mi bot?
+Es algo fácil...
 1) Primero descargas los archivos, puedes usar `git clone https://github.com/Vickito/mIRC.git` desde tu consola o simplemente puedes clickear esto [Files](https://github.com/Vickito/mIRC/archive/refs/heads/main.zip)
-2) Instalas el `mIRC` [mIRC](https://www.mirc.com/get.html) (es la app que puede correr el archivo).
-3) Poner los archivos en la carpeta `scripts/` para que tenga un mejor funcionamiento.
-4) Luego en el mIRC puedes usar `/load -rs scripts/BotNick.mrc` y `/load -rs scripts/BotNick_Main.mrc`
+2) Debes tener el `mIRC` [mIRC](https://www.mirc.com/get.html) antes que nada.
+3) Te recomendaría un editor de codigos, como `Visual Code Studio` o `Nodejs` etc.
+4) Puedes poner el archivo principal en la carpeta `scripts` de tu mIRC, cada vez que instala un mIRC se crea una carpeta con otros archivos dentro, ahí estará la carpeta `scripts`.
+5) Luego en tu mIRC, puedes poner `/load -rs scripts/BotNick.mrc` y `/load -rs scripts/BotNick_Main.mrc` (desde la barra de msj). 
+6) Si el paso anterior no te funcionó. Puedes presionar `Alt+R` o puedes ir a `Tools` y luego presionar `Scripts File...` Luego veras algunas pestañas como `Aliases`, `Popups`, `Remote`, `Users` y `Variables`. Pero donde debes presionar es en `Remote` ahí pondras el archivo. Si estás en `Remote` podras ver en la parte de arriba en la izquierda `File` y le daras a `Load...` o `Ctrl+L`. En ambos caso podrás elegir el archivo buscandolo.
 #
 ### Modificar el archivo!
 1) Debes cambiar la parte de `%Pass` para que tenga una clave privada, así solo tú tienes acceso a todas las funciones!
