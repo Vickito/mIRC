@@ -123,7 +123,7 @@ on *:text:*:*: {
           if ($level($nick) >= 5) {
             /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 10Root Estos comandos funcionan dentro de la sala y en el privado.
             /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!J #sala clave (1Para entrar a otra sala, la clave es solo en caso de que la sala sea privada). 12!P #sala (1Para salir de la sala).
-            /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick Este comando, es para añadir, solo se puede usar en la sala -> 12!Access o 12!Acceso (1Es para dar poder en tu sala, puedes poner "!Access Mod $nick $+ " y el bot te hará caso en los comandos, siempre que entres podrás subir o bajar haciendo !Op y !Deop sin necesidad de CHaN. Además podrás controlarlo sin necesidad de @. Es recomendado para las personas que confias. Además te dará @ al entrar a la sala.12)
+            /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick Solo se puede usar en la sala -> 12!Access o 12!Acceso (1Es para dar poder en tu sala, puedes poner "!Access Mod $nick $+ " y el bot te hará caso en los comandos, siempre que entres podrás subir o bajar haciendo !Op y !Deop sin necesidad de CHaN. Además podrás controlarlo sin necesidad de @. Es recomendado para las personas que confias. Además te dará @ al entrar a la sala.12)
           }
         }
         /unset %Ay2 | /halt
@@ -248,7 +248,7 @@ on *:text:*:*: {
 
       elseif ($1 == !J) { 
         if ($level($nick) >= 5) {
-          if ($2 == $null) { /privmsg $nick > !J Chan < } 
+          if ($2 == $null) { /privmsg $nick !J #Sala } 
           else { 
             /join -n #$2 $3
             $Alicia( Auto, [JOIN] $nick Hizo $1 #$2 $3) 
