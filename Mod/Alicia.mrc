@@ -18,6 +18,8 @@ alias -l Alicia {
   /set %Reg $+(%Alicia_File,Registro.txt) 
   /set %ajoin $+(%Alicia_File,AutoJoin.txt) 
 
+  /set %No_Flood OFF
+
   ;Ajusta el motivo a cómo te guste.
   /set %Motivo 4«1-12Normas1-4» 5No Permitida la entrada de menores.12 Derechos reservados en la sala $chan 
 
@@ -285,50 +287,52 @@ on *:text:*:*: {
       .halt
     }
     elseif ($1 == !Access) || ($1 == !Acceso) {
-      if ($level($nick) >= 5) || (o isincs $readini( %Chan, $chan, $nick)) {
-        if ($2 == Mod) { 
-          if ($level($nick) >= 5) { 
-            if ($3 == $null) { /privmsg $nick $1-2 nick } 
-            else {
-              if ($readini( %Chan, $chan, $3) == $null) || (o !isin $readini( %Chan, $chan, $nick)) {
-                /writeini %Chan $chan $3 ov 
-                $Alicia( Auto, [Access] $nick añadio a $3 como un Mod para la sala $chan)
-                /privmsg $chan Nivel de12 $3 fue actualizado a 12Mod.
+      if ($nick ison $chan) {
+        if ($level($nick) >= 5) || (o isincs $readini( %Chan, $chan, $nick)) {
+          if ($2 == Mod) { 
+            if ($level($nick) >= 5) { 
+              if ($3 == $null) { /privmsg $nick $1-2 nick } 
+              else {
+                if ($readini( %Chan, $chan, $3) == $null) || (o !isin $readini( %Chan, $chan, $nick)) {
+                  /writeini %Chan $chan $3 ov 
+                  $Alicia( Auto, [Access] $nick añadio a $3 como un Mod para la sala $chan)
+                  /privmsg $chan Nivel de12 $3 fue actualizado a 12Mod.
+                }
+                else { /privmsg $chan Nivel de12 $3 es de 12Mod. }
               }
-              else { /privmsg $chan Nivel de12 $3 es de 12Mod. }
             }
+            /halt
           }
-          /halt
-        }
-        elseif ($2 == Voice) { 
-          if ($level($nick) >= 5) || (o isincs $readini( %Chan, $chan, $nick)) { 
-            if ($3 == $null) { /privmsg $nick $1-2 nick } 
-            else {
-              if ($readini( %Chan, $chan, $3) == $null) || (v !isin $readini( %Chan, $chan, $nick)) {
-                /writeini %Chan $chan $3 v 
-                $Alicia( Auto, [Access] $nick añadio a $3 como un Voice para la sala $chan)
-                /privmsg $chan Nivel de12 $3 fue actualizado a 12Voice.
+          elseif ($2 == Voice) { 
+            if ($level($nick) >= 5) || (o isincs $readini( %Chan, $chan, $nick)) { 
+              if ($3 == $null) { /privmsg $nick $1-2 nick } 
+              else {
+                if ($readini( %Chan, $chan, $3) == $null) || (v !isin $readini( %Chan, $chan, $nick)) {
+                  /writeini %Chan $chan $3 v 
+                  $Alicia( Auto, [Access] $nick añadio a $3 como un Voice para la sala $chan)
+                  /privmsg $chan Nivel de12 $3 fue actualizado a 12Voice.
+                }
+                else { /privmsg $chan Nivel de12 $3 es de 12Voice. }
               }
-              else { /privmsg $chan Nivel de12 $3 es de 12Voice. }
             }
+            /halt
           }
-          /halt
-        }
-        elseif ($2 == Borrar) {  
-          if ($level($nick) >= 5) { 
-            if ($3 == $null) { /privmsg $chan $1-2 nick } 
-            else {
-            if ($readini( %Chan, $chan, $3) != $null) {
-                /remini %Chan $chan $3 
-                /privmsg $chan Nivel de12 $3 fue Borrado. 
-                $Alicia( Auto, [Access] $nick borrando a $3 de la sala $chan)
+          elseif ($2 == Borrar) {  
+            if ($level($nick) >= 5) { 
+              if ($3 == $null) { /privmsg $chan $1-2 nick } 
+              else {
+              if ($readini( %Chan, $chan, $3) != $null) {
+                  /remini %Chan $chan $3 
+                  /privmsg $chan Nivel de12 $3 fue Borrado. 
+                  $Alicia( Auto, [Access] $nick borrando a $3 de la sala $chan)
+                }
+                else { /privmsg $nick Nivel de12 $3 es Desconocido. } 
               }
-              else { /privmsg $nick Nivel de12 $3 es Desconocido. } 
             }
+            /halt
           }
-          /halt
+          else { /privmsg $chan $1 (12Mod/10Voice/04Borrar) nick }
         }
-        else { /privmsg $chan $1 (12Mod/10Voice/04Borrar) nick }
       }
     }
   }
