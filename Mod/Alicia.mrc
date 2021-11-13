@@ -357,7 +357,12 @@ on *:text:*:*: {
 
 On 1:invite:#: { 
   if ($level($nick) >= 5) || (o isin $readini( %Chan, $chan, $nick)) { /join -n $chan } 
-  else { .notice $nick Entraré después de un ratito. / I'll enter after a while. } 
+  else { 
+    if (%Aviso [ $+ [ $nick ] ] == $null) {
+      /set -u30 %Aviso $+ $nick Me invito
+      .notice $nick Entraré después de un ratito. / I'll enter after a while. 
+    } 
+  } 
   $Alicia( Reg, [Invite] me invitaron a en $chan por $nick)
 }
 
