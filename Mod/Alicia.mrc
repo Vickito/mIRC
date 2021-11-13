@@ -60,7 +60,7 @@ ctcp ^*:*:*:{
   elseif (%ctcpflood != $null) { 
     /ignore -u10 $nick 
     /notice $me Ignorando a $nick por 10seg. Motivo: Muchos ctcpflood.
-    $Alicia( Reg, Ignoré a $nick por 10seg. Motivo: Muchos ctcpflood.)
+    $Alicia( Reg, [Ignore] Ignoré a $nick por 10seg. Motivo: Muchos ctcpflood.)
     /halt 
   } 
 }
@@ -329,16 +329,18 @@ on *:text:*:*: {
   else {
     if ($me isop $chan) {
       /inc -u4 %Lineas_ $+ $nick 1
-      if (%Lineas_ [ $+ [ $nick ] ] == 2) {
+      if (%Lineas_ [ $+ [ $nick ] ] == 3) {
         /privmsg $chan Aviso 1: $nick porfa no escribas tanto!
         $Alicia( Reg, [Flood] Aviso 1 dado a $nick en $chan)
       }
-      elseif (%Lineas_ [ $+ [ $nick ] ] == 3) {
+      elseif (%Lineas_ [ $+ [ $nick ] ] == 5) {
         /privmsg $chan Aviso 2: $nick ultimo aviso...
         $Alicia( Reg, [Flood] Aviso 2 dado a $nick en $chan)
       }
-      elseif (%Lineas_ [ $+ [ $nick ] ] >= 4) {
+      elseif (%Lineas_ [ $+ [ $nick ] ] >= 7) {
+        /mode $chan -v $nick
         /ban -u15 $chan $nick 2
+        /ignore -u15 $nick
         /privmsg $chan Aviso 3: $nick aguantate 15seg para volver a hablar =)
         $Alicia( Reg, [Flood] Aviso 3 dado a $nick en $chan y baneado por 15seg.)
       }
@@ -356,7 +358,7 @@ On 1:invite:#: {
 
 On 1:OP:#: { 
   if ($opnick == $me) { 
-    if ($banmask iswm $address($me,5)) { /mode $chan -b $banmask } 
+    if ($banmask iswm $address($me,2)) { /mode $chan -b $banmask } 
   } 
 }
 
