@@ -17,6 +17,9 @@ alias -l Alicia {
   /set %Reg $+(%Alicia_File,Registro.txt) 
   /set %ajoin $+(%Alicia_File,AutoJoin.txt) 
 
+  ;Ajusta el motivo a cómo te guste.
+  /set %Motivo 4«1-12Normas1-4» 5No Permitida la entrada de menores.12 Derechos reservados en la sala $chan 
+
   ;El bot creara la carpeta "Datos". Luego automaticamente irá añadiendo "Chan.txt", "Registro.txt" y las demás.
   if ($exists(%Alicia_File) != $true) { /mkdir %Alicia_File }
 
@@ -173,8 +176,7 @@ on *:text:*:*: {
             if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para expulsar. }
             elseif ($2 isop $chan) || (o isin $readini( %Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
             else {
-              .set %Motivo «-Normas-»  No Permitida la entrada de menores. Canal para $chan
-              /kick $chan $2 (| $+ %Motivo $+ |)
+              /kick $chan $2 %Motivo
               $Alicia( Auto, [Kick] $nick -> en $chan hizo $1 a $2 $3-)
             }
           }
@@ -191,7 +193,7 @@ on *:text:*:*: {
             if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para banear. }
             elseif ($2 isop $chan) || (o isin $readini( %Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
             else { 
-              /ban -u300 $chan $2 
+              /ban -u300 $chan $2 2
               $Alicia( Auto, [Ban] $nick -> en $chan hizo $1 a $2)
             }
           }
@@ -207,7 +209,7 @@ on *:text:*:*: {
           if ($me isop $chan) {
             if ($2 == $null) { /set -u10 %Ban_User $nick } 
             else { /set -u10 %Ban_User $2 }
-            /set -u10 %Ban_1 %Ban_User $address(%Ban_User,5) 
+            /set -u10 %Ban_1 %Ban_User $address(%Ban_User,2) 
             /mode $chan -bb %Ban_1 
           }
           ;Parte 2: El bot dejara en claro que no tiene @ y que no puede hacer mucho.
@@ -223,7 +225,7 @@ on *:text:*:*: {
             if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para expulsar y banear. }
             elseif ($2 isop $chan) || (o isin $readini( %Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
             else { 
-              .ban -ku300 $chan $2 2 (Motivo: $3- $+ ) 
+              .ban -ku300 $chan $2 2 %Motivo
               $Alicia( Auto, [Kick_Ban] $nick -> en $chan hizo $1 a $2 $3-) 
             } 
           }
@@ -373,3 +375,5 @@ On *:ban:#: {
     $Alicia( Reg, [Ban] me baneron en $chan por $nick)
   }
 }
+
+
