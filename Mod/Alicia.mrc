@@ -80,39 +80,40 @@ On 1:connect: {
 ;Los comandos.
 on *:text:*:*: {
   /Alicia
-  if ($1 == !ajoin) { 
-    if ($level($nick) >= 5) {
-      if ($2 == lista) { $Alicia(Lista, $nick) }
-      elseif ($2 == ajoin) { $Alicia(AutoJoin) }
-      elseif ($2 == add) {
-        if ($3 == $null) { /privmsg $nick Dame una sala para entrar. } 
-        else {
-          if ($read(%ajoin,w,#$3) == $null) { 
-            /write %ajoin #$3-4 
-            /privmsg $nick Listo, la sala 12 $+ #$3 $+  añadida en mi archivo.
-            if ($me !ison $3) { /join -n #$3-4 }
-          }
-          else { /privmsg $nick Sala12 #$3 Si esta en mi archivo. }
-        }
-      }
-      elseif ($2 == Del) {
-        if ($3 == $null) { /privmsg $nick Dame una sala para entrar. } 
-        else {
-          if ($read(%ajoin,w,#$3) != $null) { 
-            .write -ds $+ $read(%ajoin,w,#$3) %ajoin
-            /privmsg $nick Listo, la sala12 #$3 eliminada de mi archivo. 
-            if ($me ison $3) { /part #$3 Chao, eliminada de mi archivo. }
-          }
-          else { /privmsg $nick Sala12 #$3 No esta en mi archivo. }
-        }
-      }
-      else { /privmsg $nick Puedes usar 12Lista/12ajoin/12Add/12Del. }
-      /halt
-    }
-  }
   if ($level($nick) >= 5) || (o isin $readini( %Chan, $chan, $nick)) || ($nick isop $chan) {
     if (%Nivel [ $+ [ $address($nick,2) ] ] == $null) {
       /set -u2 %Nivel $+ $address($nick,2) ^
+
+      if ($1 == !ajoin) { 
+        if ($level($nick) >= 5) {
+          if ($2 == lista) { $Alicia(Lista, $nick) }
+          elseif ($2 == ajoin) { $Alicia(AutoJoin) }
+          elseif ($2 == add) {
+            if ($3 == $null) { /privmsg $nick Dame una sala para entrar. } 
+            else {
+              if ($read(%ajoin,w,#$3) == $null) { 
+                /write %ajoin #$3-4 
+                /privmsg $nick Listo, la sala 12 $+ #$3 $+  añadida en mi archivo.
+                if ($me !ison $3) { /join -n #$3-4 }
+              }
+              else { /privmsg $nick Sala12 #$3 Si esta en mi archivo. }
+            }
+          }
+          elseif ($2 == Del) {
+            if ($3 == $null) { /privmsg $nick Dame una sala para entrar. } 
+            else {
+              if ($read(%ajoin,w,#$3) != $null) { 
+                .write -ds $+ $read(%ajoin,w,#$3) %ajoin
+                /privmsg $nick Listo, la sala12 #$3 eliminada de mi archivo. 
+                if ($me ison $3) { /part #$3 Chao, eliminada de mi archivo. }
+              }
+              else { /privmsg $nick Sala12 #$3 No esta en mi archivo. }
+            }
+          }
+          else { /privmsg $nick Puedes usar 12Lista/12ajoin/12Add/12Del. }
+          /halt
+        }
+      }
       if ($1 == !Ayuda) {
         if (%Ay1 [ $+ [ $nick ] ] != $null) { /halt } 
         else { 
@@ -325,8 +326,6 @@ on *:text:*:*: {
     }
     /halt
   }
-
-  ;Está será la parte para el flood.
   else {
     if ($me isop $chan) {
       /inc -u4 %Lineas_ $+ $nick 1
@@ -342,11 +341,12 @@ on *:text:*:*: {
         /ban -u15 $chan $nick 2
         /privmsg $chan Aviso 3: $nick aguantate 15seg para volver a hablar =)
         $Alicia( Reg, [Flood] Aviso 3 dado a $nick en $chan y baneado por 15seg.)
-
       }
     }
   }
+
 }
+
 
 On 1:invite:#: { 
   if ($level($nick) >= 5) || (o isin $readini( %Chan, $chan, $nick)) { /join -n $chan } 
@@ -375,5 +375,3 @@ On *:ban:#: {
     $Alicia( Reg, [Ban] me baneron en $chan por $nick)
   }
 }
-
-
