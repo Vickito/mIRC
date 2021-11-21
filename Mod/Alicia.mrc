@@ -6,37 +6,56 @@
   Siempre veras todo lo que está pasando en el archivo "Registro.txt"
   Cada comando que se utilice, sabrás quién lo hizo y el día y la hora.
   Puede ser un metodo genial si pasa algo y quieres tener prueba de quién causo lo que esta pasando.
-*/
+  */
 
 alias -l Alicia {
-  ;Puedes cambiar la ruta si quieres. Pero está sera la predestinada de momento.
   /set %Alicia_File $+(scripts\Datos\) 
 
-  ;Es donde se escribira algunas cosas que ayudara al bot a saber quién es quién.
   /set %Chan $+(%Alicia_File,Chan.txt) 
   /set %Admin $+(%Alicia_File,Admin.txt) 
   /set %Reg $+(%Alicia_File,Registro.txt) 
   /set %ajoin $+(%Alicia_File,AutoJoin.txt) 
 
+  /**
+    Esta parte es para la IP y nick.
+    */
+  /set %Bloqueos $+(%Alicia_File,Bloqueos.txt)
+
+  /**
+    Para las salas donde se chequeara la IP y los Nick. 
+    */
+  /set %Chan_1 #world_lesbians 
+  /set %Chan_2 #jovenes_lesbianas 
+  /set %Chan_3 #las_locas_del_coño
+
+  /** 
+    Para el flood. 
+    */
   /set %No_Flood OFF
 
-  ;Ajusta el motivo a cómo te guste.
+  /**
+    Ajusta el motivo a cómo te guste.
+    */
   /set %Motivo 4«1-12Normas1-4» 5No Permitida la entrada de menores.12 Derechos reservados en la sala $chan 
 
-  ;El bot creara la carpeta "Datos". Luego automaticamente irá añadiendo "Chan.txt", "Registro.txt" y las demás.
+  /**
+    El bot creara la carpeta "Datos". Luego automaticamente irá añadiendo "Chan.txt", "Registro.txt" y las demás.
+    */
   if ($exists(%Alicia_File) != $true) { /mkdir %Alicia_File }
 
-  ;Esto es para el reinicio del archivo, se cargará solo al mandar un mensaje. 
-  ;Solo lo puedes usar si es que has cambiado algo del archivo desde un editor.
+  /**
+    Esto es para el reinicio del archivo, se cargará solo al mandar un mensaje. 
+    Solo lo puedes usar si es que has cambiado algo del archivo desde un editor.
+    */
   elseif ($1 == Script) { /load -rs scripts\ $+ $nopath($script) }
 
-  ;Aqui se registrara todo lo que se haga con los comandos.
-  ;Solo comandos del bot, nada de chats, charlas o etc. 
-  ;Solo quieres pruebas de quién hizo el llamado a los comandos y nada más.
+  /** 
+    Aqui se registrara todo lo que se haga con los comandos.
+    Solo comandos del bot, nada de chats, charlas o etc. 
+    Solo quieres pruebas de quién hizo el llamado a los comandos y nada más.
+    */
   elseif ($1 == Reg) { /writeini %Reg $asctime(dd/mm/yyyy) $+([,$asctime(hh:nn:sstt zzz),]) •·• $2- }
   
-  ;Este es el autojoin, es un mecanismo para hacer que el bot entré solo a sus canales.
-  ;Te recomiendo no jugar con está parte, es algo delicada.
   elseif ($1 == AutoJoin) {
     /inc -u300 %ajoin_lineas 1
     while (%ajoin_lineas <= $lines(%ajoin)) {
@@ -50,29 +69,34 @@ alias -l Alicia {
     .unset %ajoin_*
   }
 
-  ;Es para la lista del autojoin, te dirá todas las salas que tengas ahí, o si no tienes alguna.
   elseif ($1 == Lista) {
     if ($exists(%ajoin) == $true) { /privmsg $2 AutoJoin: | .play $2 %ajoin 1500 }
     else { /privmsg $2 Lista de AutoJoin No existe... }
   }
 }
 
-;Esta parte es para limitar los ctcp, es por seguridad y además para prevenir el lag.
 ctcp ^*:*:*:{ 
   if (%ctcpflood == $null) { /inc -u10 %ctcpflood 1 } 
   elseif (%ctcpflood != $null) { 
     /ignore -u10 $nick 
     /notice $me Ignorando a $nick por 10seg. Motivo: Muchos ctcpflood.
     $Alicia( Reg, [Ignore] Ignoré a $nick por 10seg. Motivo: Muchos ctcpflood.)
-    /halt 
   } 
 }
 
-;El bot mirara a ver quién entro, luego le dará su @ si es que está registrado.
 On 1:join:#: { 
   if ($me isop $chan) {
-    if (ov isin $readini( %Chan, $chan, $nick)) { /mode $chan +ov $nick $nick }
-    elseif (v isin $readini( %Chan, $chan, $nick)) { /mode $chan +v $nick }
+    if (ov isin $readini(%Chan, $chan, $nick)) { /mode $chan +ov $nick $nick }
+    elseif (v isin $readini(%Chan, $chan, $nick)) { /mode $chan +v $nick }
+    elseif ($chan == %Chan_1) || ($chan == %Chan_2) || ($chan == %Chan_3) {
+      if ($readini(%Bloqueos, IPs, $address($nick, 2)) != $null) {
+        /ban -ku3600 $chan $nick 2 Advertencias [IP Prohibida:1.::.12 $address($nick, 2) 1.::.]  
+      }
+      elseif ($readini(%Bloqueos, Nick, $nick) != $null) {
+        /ban -ku3600 $chan $nick 2 Advertencias [Nick Prohibido:1.::.12 $nick 1.::.] 
+      }
+      else { /halt }
+    }
   }
 }
 
@@ -80,266 +104,340 @@ On 1:connect: {
   $Alicia(AutoJoin) 
 }
 
+/**
+  Esta es para el privado y los channels
+  en dado caso de que algo falle, tienes mucha forma de arreglarlo.  
+  */
+
+on 1:text:!Ayuda *:*: {
+  if ($1 == !Ayuda) {
+    if (%Ay1 [ $+ [ $nick ] ] != $null) { /halt } 
+    else { 
+      /inc -z %Ay1 $+ $nick 30
+      /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 2Estos comandos solo funcionan en la sala! No en el privado
+      /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Invi nick (1Para invitar a la sala). 12!Nivel (1Para saber tu nivel). 12!Op (1Para dar(te) @). 12!Deop (1Para quitar(te) @). 12!Kick nick motivo (1Para expulsar, el motivo es opcional). 
+      /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Ban nick (1Banear a un user que ande haciendo cosas que no debe). 12!UnBan (1Para quitar(te) un ban). 12!kb nick motivo (1Es lo mismo que !Ban y !Kick, solo que juntos. El motivo es opcional). 
+      /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Hop (Para hacer un salir y volver a entrar a la sala). 12!Flood ON/OFF (Para proteger la sala de ataques de clones, o simplemente mantener el balance)
+      if ($level($nick) >= 5) {
+        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 10Root Estos comandos funcionan dentro de la sala y en el privado.
+        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Join #sala clave (1Para entrar a otra sala, la clave es solo en caso de que la sala sea privada). 12!Part #sala (1Para salir de la sala).
+        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Nick (1Para bloquear a un nick de la sala. Ej: !Nick $nick / !Nick Del $nick $+ ). 12!IP (1Para bloquear una ip. Ej: !IP $address($nick, 2) / !IP Del $address($nick, 2) $+ ).
+        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick Solo se puede usar en la sala -> 12!Access o 12!Acceso (1Es para dar poder en tu sala, puedes poner "10!Access Mod $nick $+ " y el bot te hará caso en los comandos, siempre que entres podrás subir o bajar haciendo !Op y !Deop sin necesidad de CHaN).
+      }
+    }
+    /unset %Ay2 | /halt
+  }
+}
+
+on 5:text:!Nick *:*: {
+  if ($1 == !Nick) {
+    if ($2 !== $null) {
+      if ($readini(%Bloqueos, Nick, $2) != $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Lo siento, pero el nick " $+ $2 $+ " está en la lista. }
+      else {
+        /writeini %Bloqueos Nick $2 $2
+        /privmsg $iif($nick ison $chan, $chan, $nick) $2 fue añadido a la lista de nick bloqueados.
+      }
+    }
+    elseif ($2 == Del) {
+      if ($readini(%Bloqueos, Nick, $3) == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Lo siento, pero " $+ $3 $+ " no está en la lista. }
+      else {
+        /remini %Bloqueos Nick $3
+        /privmsg $iif($nick ison $chan, $chan, $nick) $3 fue eliminado de la lista de nick bloqueados.
+      }
+    }
+    else { /privmsg $iif($nick ison $chan, $chan, $nick) Debes poner !Nick $nick para añadir o !Nick Del $nick para borrar. }
+    /halt
+  }
+}
+
+on 5:text:!IP *:*: {
+  if ($1 == !IP) {
+    if ($2 !== $null) {
+      if (*!*@ isin $2) {
+        if ($2 != $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Lo siento, pero la IP $2 está en la lista. }
+        else {
+          /writeini %Bloqueos IP $2 $asctime(dd/mmm/yyyy hh:nntt zzz)
+          /privmsg $iif($nick ison $chan, $chan, $nick) $2 fue añadido a la lista de IP bloqueadas.
+        }
+      }
+      else { 
+        if ($address($3, 2) == $true) {
+          if ($readini(%Bloqueos, IP, $address($2, 2)) != $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Lo siento, pero la IP $2 está en la lista. }
+          else {
+            /writeini %Bloqueos IP $address($2, 2) $asctime(dd/mmm/yyyy hh:nntt zzz)
+            /privmsg $iif($nick ison $chan, $chan, $nick) $address($2, 2) fue añadido a la lista de IP bloqueadas.
+          }
+        }
+        else { /privmsg $iif($nick ison $chan, $chan, $nick) Te recuerdo que tienes que poner una IP y solo se puede usar el host. Ej: *!*@host }
+      }
+    }
+    elseif ($2 == Del) {
+      if ($3 == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Lo siento, pero $3 no está en la lista. }
+      else {
+        /remini %Bloqueos Nick $3
+        /privmsg $iif($nick ison $chan, $chan, $nick) $3 fue eliminado de la lista de IP bloqueadas.
+      }
+    }
+    else { /privmsg $iif($nick ison $chan, $chan, $nick) Debes poner !IP *!*@host para añadir o !IP Del *!*@host para borrar. }
+    /halt
+  }
+}
+
+on 5:text:!Ajoin *:*: {
+  if ($1 == !Ajoin) { 
+    if ($2 == lista) { $Alicia(Lista, $nick) }
+    elseif ($2 == ajoin) { $Alicia(AutoJoin) }
+    elseif ($2 == add) {
+      if ($3 == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Dame una sala para entrar. } 
+      else {
+        if ($read(%ajoin,w,#$3) == $null) { 
+          /write %ajoin #$3-4 
+          /privmsg $iif($nick ison $chan, $chan, $nick) Listo, la sala 12 $+ #$3 $+  añadida en mi archivo.
+          if ($me !ison $3) { /join -n #$3-4 }
+        }
+        else { /privmsg $iif($nick ison $chan, $chan, $nick) Sala12 #$3 Si esta en mi archivo. }
+      }
+    }
+    elseif ($2 == Del) {
+      if ($3 == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) Dame una sala para entrar. } 
+      else {
+        if ($read(%ajoin,w,#$3) != $null) { 
+          .write -ds $+ $read(%ajoin,w,#$3) %ajoin
+          /privmsg $iif($nick ison $chan, $chan, $nick) Listo, la sala12 #$3 eliminada de mi archivo. 
+          if ($me ison $3) { /part #$3 Chao, eliminada de mi archivo. }
+        }
+        else { /privmsg $iif($nick ison $chan, $chan, $nick) Sala12 #$3 No esta en mi archivo. }
+      }
+    }
+    else { /privmsg $iif($nick ison $chan, $chan, $nick) Puedes usar 12Lista/12ajoin/12Add/12Del. }
+    /halt
+  }
+}
+
+on 5:text:!Join *:*: {
+  if ($1 == !J) { 
+    if ($2 == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) !J Sala } 
+    else { 
+      /join -n #$2
+      $Alicia( Auto, [JOIN] $nick Hizo $1 #$2 $3) 
+    }
+    /halt
+  }
+}
+
+on 5:text:!Part *:*: {
+  if ($1 == !P) { 
+    if ($2 == $null) { 
+      if ($nick !ison $chan) { /privmsg $iif($nick ison $chan, $chan, $nick) Lo siento, comando mal ejecutado. 12!P #Sala }
+      else { 
+        /part $chan uy me fuiiii =)
+        $Alicia( Auto, [Part] $nick Hizo $1 $chan)
+      }
+    } 
+    else { 
+      /part #$2 Adiós =) $3-
+      $Alicia( Auto, [Part] $nick Hizo $1 #$2 $3-)
+    } 
+    /halt
+  }
+}
+
+/**
+  Para la Channels.
+  En dado caso que algo falle, se debe revisar cada espacio y cada comando.
+  Comunicate con ViCoM enviandole un MeMo, puedes usar 
+  "/msg MeMo send ViCoM Necesito ayuda, he encontrado un fallo."
+  */
+on 1:text:!Invi *:#: {
+  if ($1 == !Invi) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($2 == $null) { /privmsg $chan $1 NiCK. } 
+      else { 
+        if ($me isop $chan) { /invite $2 $chan } 
+        /notice $2 $nick Te ha invitado a $chan / $nick Has invited you to $chan 
+      }
+    }
+    /halt
+  }
+}
+
+on 1:text:!Nivel *:#: {
+  if ($1 == !Nivel) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($level($nick) >= 5) { /privmsg $chan Eres 10Root }
+      elseif (ov isin $readini(%Chan, $chan, $nick)) { /privmsg $chan Eres 12Mod } 
+      elseif (o isincs $readini(%Chan, $chan, $nick)) { /privmsg $chan Eres 12Voice } 
+      else { /privmsg $chan Eres un @ =) }
+    }
+    /halt
+  }
+}
+
+on 1:text:!Op *:#: {
+  if ($1 == !Op) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($me isop $chan) {
+        if ($2 == $null) { /mode $chan +ov $nick $nick } 
+        else { /mode $chan +ooovvv $2-4 $2-4 | /mode $chan +ooovvv $5-7 $5-7 } 
+      }
+    }
+    /halt
+  }
+}
+
+on 1:text:!Deop *:#: {
+  if ($1 == !Deop) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($me isop $chan) {
+        if ($2 == $null) { /mode $chan -o+v $nick $nick } 
+        elseif ($me isin $2-7) { /halt }
+        else { /mode $chan -ooovvv $2-4 $2-4 | /mode $chan -ooovvv $5-7 $5-7 } 
+      }
+    }
+    /halt
+  }
+}
+
+on 1:text:!Kick *:#: {
+  if ($1 == !Kick) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($me isop $chan) {
+        if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para expulsar. }
+        elseif ($2 isop $chan) || (o isin $readini(%Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
+        else {
+          /kick $chan $2 %Motivo
+          $Alicia( Auto, [Kick] $nick -> en $chan hizo $1 a $2 $3-)
+        }
+      }
+      else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
+    }
+    /halt
+  }
+}
+
+on 1:text:!Ban *:#: {
+  if ($1 == !Ban) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($me isop $chan) {
+        if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para banear. }
+        elseif ($2 isop $chan) || (o isin $readini(%Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
+        else { 
+          /ban -u300 $chan $2 2
+          $Alicia( Auto, [Ban] $nick -> en $chan hizo $1 a $2)
+        }
+      }
+      else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
+    }
+    /halt
+  }
+}
+
+on 1:text:!UnBan *:#: {
+  if ($1 == !UnBan) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($me isop $chan) {
+        if ($2 == $null) { /set -u10 %Ban_User $nick } 
+        else { /set -u10 %Ban_User $2 }
+        /set -u10 %Ban_1 %Ban_User $address(%Ban_User,2) 
+        /mode $chan -bb %Ban_1 
+      }
+      else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
+    }
+    /halt
+  }
+}
+
+on 1:text:!kb *:#: {
+  if ($1 == !kb) {
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+      if ($me isop $chan) {
+        if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para expulsar y banear. }
+        elseif ($2 isop $chan) || (o isin $readini(%Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
+        else { 
+          .ban -ku300 $chan $2 2 %Motivo
+          $Alicia( Auto, [Kick_Ban] $nick -> en $chan hizo $1 a $2 $3-) 
+        } 
+      }
+      else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
+    }
+    /halt
+  }
+}
+
+on 1:text:!Hop *:#: {
+  if ($1 == !Hop) { 
+    if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) {
+      /hop -cn $chan Saltito 
+      $Alicia( Auto, [HOP] $nick Hizo $1 en $chan) 
+    }
+    /halt
+  }
+}
+
+on 1:text:!Acceso *:#: {
+  if ($1 == !Access) {
+    if ($level($nick) >= 5) || (o isincs $readini(%Chan, $chan, $nick)) {
+      if ($2 == Mod) { 
+        if ($level($nick) >= 5) { 
+          if ($3 == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) $1-2 nick } 
+          else {
+            if ($readini(%Chan, $chan, $3) == $null) || (o !isin $readini(%Chan, $chan, $nick)) {
+              /writeini %Chan $chan $3 ov 
+              $Alicia( Auto, [Access] $nick añadio a $3 como un Mod para la sala $chan)
+              /privmsg $chan Nivel de12 $3 fue actualizado a 12Mod.
+            }
+            else { /privmsg $chan Nivel de12 $3 es de 12Mod. }
+          }
+        }
+        /halt
+      }
+      elseif ($2 == Voice) { 
+        if ($level($nick) >= 5) || (o isincs $readini(%Chan, $chan, $nick)) { 
+          if ($3 == $null) { /privmsg $iif($nick ison $chan, $chan, $nick) $1-2 nick } 
+          else {
+            if ($readini(%Chan, $chan, $3) == $null) || (v !isin $readini(%Chan, $chan, $nick)) {
+              /writeini %Chan $chan $3 v 
+              $Alicia( Auto, [Access] $nick añadio a $3 como un Voice para la sala $chan)
+              /privmsg $chan Nivel de12 $3 fue actualizado a 12Voice.
+            }
+            else { /privmsg $chan Nivel de12 $3 es de 12Voice. }
+          }
+        }
+        /halt
+      }
+      elseif ($2 == Borrar) {  
+        if ($level($nick) >= 5) { 
+          if ($3 == $null) { /privmsg $chan $1-2 nick } 
+          else {
+          if ($readini(%Chan, $chan, $3) != $null) {
+              /remini %Chan $chan $3 
+              /privmsg $chan Nivel de12 $3 fue Borrado. 
+              $Alicia( Auto, [Access] $nick borrando a $3 de la sala $chan)
+            }
+            else { /privmsg $iif($nick ison $chan, $chan, $nick) Nivel de12 $3 es Desconocido. } 
+          }
+        }
+        /halt
+      }
+      else { /privmsg $chan $1 (12Mod/10Voice/04Borrar) nick }
+    }
+    /halt
+  }
+}
+
 ;Los comandos.
 on *:text:*:*: {
   /Alicia
-  if ($level($nick) >= 5) || (o isin $readini( %Chan, $chan, $nick)) || ($nick isop $chan) {
-    if ($1 == !ajoin) { 
-      if ($level($nick) >= 5) {
-        if ($2 == lista) { $Alicia(Lista, $nick) }
-        elseif ($2 == ajoin) { $Alicia(AutoJoin) }
-        elseif ($2 == add) {
-          if ($3 == $null) { /privmsg $nick Dame una sala para entrar. } 
-          else {
-            if ($read(%ajoin,w,#$3) == $null) { 
-              /write %ajoin #$3-4 
-              /privmsg $nick Listo, la sala 12 $+ #$3 $+  añadida en mi archivo.
-              if ($me !ison $3) { /join -n #$3-4 }
-            }
-            else { /privmsg $nick Sala12 #$3 Si esta en mi archivo. }
-          }
-        }
-        elseif ($2 == Del) {
-          if ($3 == $null) { /privmsg $nick Dame una sala para entrar. } 
-          else {
-            if ($read(%ajoin,w,#$3) != $null) { 
-              .write -ds $+ $read(%ajoin,w,#$3) %ajoin
-              /privmsg $nick Listo, la sala12 #$3 eliminada de mi archivo. 
-              if ($me ison $3) { /part #$3 Chao, eliminada de mi archivo. }
-            }
-            else { /privmsg $nick Sala12 #$3 No esta en mi archivo. }
-          }
-        }
-        else { /privmsg $nick Puedes usar 12Lista/12ajoin/12Add/12Del. }
-        /halt
-      }
-    }
-    elseif ($1 == !Ayuda) {
-      if (%Ay1 [ $+ [ $nick ] ] != $null) { /halt } 
-      else { 
-        /inc -z %Ay1 $+ $nick 30
-        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 2Estos comandos solo funcionan en la sala! No en el privado
-        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Invi nick (1Para invitar a la sala). 12!Nivel (1Para saber tu nivel). 12!Op (1Para dar(te) @). 12!Deop (1Para quitar(te) @). 12!Kick nick motivo (1Para expulsar, el motivo es opcional). 
-        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Ban nick (1Banear a un user que ande haciendo cosas que no debe). 12!UnBan (1Para quitar(te) un ban). 12!kb nick motivo (1Es lo mismo que !Ban y !Kick, solo que juntos. El motivo es opcional). 
-        /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!Hop (Para hacer un salir y volver a entrar a la sala). 12!Flood ON/OFF (Para proteger la sala de ataques de clones, o simplemente mantener el balance)
-        if ($level($nick) >= 5) {
-          /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 10Root Estos comandos funcionan dentro de la sala y en el privado.
-          /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick 12!J #sala clave (1Para entrar a otra sala, la clave es solo en caso de que la sala sea privada). 12!P #sala (1Para salir de la sala).
-          /inc %Ay2 | /timer 1 %Ay2 /privmsg $nick Solo se puede usar en la sala -> 12!Access o 12!Acceso (1Es para dar poder en tu sala, puedes poner "10!Access Mod $nick $+ " y el bot te hará caso en los comandos, siempre que entres podrás subir o bajar haciendo !Op y !Deop sin necesidad de CHaN).
-        }
-      }
-      /unset %Ay2 | /halt
-    }
-    elseif ($1 == !Invi) {
-      if ($nick ison $chan) {
-        if ($2 == $null) { /privmsg $chan $1 NiCK. } 
-        else { 
-          if ($me isop $chan) { /invite $2 $chan } 
-          /notice $2 $nick Te ha invitado a $chan / $nick Has invited you to $chan 
-        }
-        /halt
-      }
-    }
-    elseif ($1 == !Nivel) {
-      if ($nick ison $chan) {
-        if ($level($nick) >= 5) { /privmsg $chan Eres 10Root }
-        elseif (ov isin $readini( %Chan, $chan, $nick)) { /privmsg $chan Eres 12Mod } 
-        elseif (o isincs $readini( %Chan, $chan, $nick)) { /privmsg $chan Eres 12Voice } 
-        /halt
-      }
-    }
-    elseif ($1 == !Op) {
-      if ($nick ison $chan) {
-        if ($me isop $chan) {
-          if ($2 == $null) { /mode $chan +ov $nick $nick } 
-          else { /mode $chan +ooovvv $2-4 $2-4 | /mode $chan +ooovvv $5-7 $5-7 } 
-        }
-        /halt
-      }
-    }
-    elseif ($1 == !Deop) {
-      if ($nick ison $chan) {
-        if ($me isop $chan) {
-          if ($2 == $null) { /mode $chan -o+v $nick $nick } 
-          elseif ($me isin $2-7) { /halt }
-          else { /mode $chan -ooovvv $2-4 $2-4 | /mode $chan -ooovvv $5-7 $5-7 } 
-        }
-        /halt
-      }
-    }
-    elseif ($1 == !Kick) {
-      if ($nick ison $chan) {
-        ;Parte 1: Si es el bot tiene @ continuara, sino se ira a la parte 2.
-        if ($me isop $chan) {
-          if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para expulsar. }
-          elseif ($2 isop $chan) || (o isin $readini( %Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
-          else {
-            /kick $chan $2 %Motivo
-            $Alicia( Auto, [Kick] $nick -> en $chan hizo $1 a $2 $3-)
-          }
-        }
-        ;Parte 2: El bot dejara en claro que no tiene @ y que no puede hacer mucho.
-        else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
-        /halt
-      }
-    }
-    elseif ($1 == !Ban) {
-      if ($nick ison $chan) {
-        ;Parte 1: Si es el bot tiene @ continuara, sino se ira a la parte 2.
-        if ($me isop $chan) {
-          if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para banear. }
-          elseif ($2 isop $chan) || (o isin $readini( %Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
-          else { 
-            /ban -u300 $chan $2 2
-            $Alicia( Auto, [Ban] $nick -> en $chan hizo $1 a $2)
-          }
-        }
-        ;Parte 2: El bot dejara en claro que no tiene @ y que no puede hacer mucho.
-        else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
-        /halt
-      }
-    }
-    elseif ($1 == !UnBan) {
-      if ($nick ison $chan) {
-        ;Parte 1: Si es el bot tiene @ continuara, sino se ira a la parte 2.
-        if ($me isop $chan) {
-          if ($2 == $null) { /set -u10 %Ban_User $nick } 
-          else { /set -u10 %Ban_User $2 }
-          /set -u10 %Ban_1 %Ban_User $address(%Ban_User,2) 
-          /mode $chan -bb %Ban_1 
-        }
-        ;Parte 2: El bot dejara en claro que no tiene @ y que no puede hacer mucho.
-        else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
-        /halt
-      }
-    }
-    elseif ($1 == !kb) {
-      if ($nick ison $chan) {
-        ;Parte 1: Si es el bot tiene @ continuara, sino se ira a la parte 2.
-        if ($me isop $chan) {
-          if ($2 == $null) { /privmsg $chan Lo siento $nick $+ , debes darme un nick para expulsar y banear. }
-          elseif ($2 isop $chan) || (o isin $readini( %Chan, $chan, $2)) { /privmsg $chan Lo siento $nick $+ , $2 tiene @ en está sala. }
-          else { 
-            .ban -ku300 $chan $2 2 %Motivo
-            $Alicia( Auto, [Kick_Ban] $nick -> en $chan hizo $1 a $2 $3-) 
-          } 
-        }
-        ;Parte 2: El bot dejara en claro que no tiene @ y que no puede hacer mucho.
-        else { /privmsg $chan Lo siento $nick $+ , no tengo @. }
-        /halt
-      }
-    }
-    elseif ($1 == !Hop) { 
-      if ($nick ison $chan) {
-        ;Parte 1: Mirara si tiene permiso para hacer este comando.
-        if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) {
-          /hop -cn $chan Saltito 
-          $Alicia( Auto, [HOP] $nick Hizo $1 en $chan) 
-        }
-        /halt
-      }
-    }
-    elseif ($1 == !Flood) { 
-      if ($nick ison $chan) {
-        if ($2 == ON) {
-          if (%No_Flood != ON) {
-            /set %No_Flood ON
-            /privmsg $chan AntiFlood activado.
-            $Alicia( Auto, [Flood] $nick Activo AntiFlood en $chan)
-          }
-          else { /privmsg $chan AntiFlood se encuentra activado. }
-        }
-        if ($2 == OFF) {
-          if (%No_Flood == ON) {
-            /set %No_Flood OFF
-            /privmsg $chan AntiFlood activado.
-            $Alicia( Auto, [Flood] $nick Desactivo AntiFlood en $chan)
-          }
-          else { /privmsg $chan AntiFlood se encuentra desactivado. }
-        }
-      }
-      /halt
-    }
-    elseif ($1 == !J) { 
-      if ($level($nick) >= 5) {
-        if ($2 == $null) { /privmsg $nick !J #Sala } 
-        else { 
-          /join -n #$2 $3
-          $Alicia( Auto, [JOIN] $nick Hizo $1 #$2 $3) 
-        } 
-      }
-      .halt
-    }
-    elseif ($1 == !P) { 
-      if ($level($nick) >= 5) {
-        if ($2 == $null) { 
-          if ($nick !ison $chan) { /privmsg $nick Lo siento, comando mal ejecutado. 12!P #Sala }
-          else { 
-            /part $chan uy me fuiiii =)
-            $Alicia( Auto, [Part] $nick Hizo $1 $chan)
-          }
-        } 
-        else { 
-          /part #$2 Adiós =) $3-
-          $Alicia( Auto, [Part] $nick Hizo $1 #$2 $3)
-        } 
-      }
-      .halt
-    }
-    elseif ($1 == !Access) || ($1 == !Acceso) {
-      if ($nick ison $chan) {
-        if ($level($nick) >= 5) || (o isincs $readini( %Chan, $chan, $nick)) {
-          if ($2 == Mod) { 
-            if ($level($nick) >= 5) { 
-              if ($3 == $null) { /privmsg $nick $1-2 nick } 
-              else {
-                if ($readini( %Chan, $chan, $3) == $null) || (o !isin $readini( %Chan, $chan, $nick)) {
-                  /writeini %Chan $chan $3 ov 
-                  $Alicia( Auto, [Access] $nick añadio a $3 como un Mod para la sala $chan)
-                  /privmsg $chan Nivel de12 $3 fue actualizado a 12Mod.
-                }
-                else { /privmsg $chan Nivel de12 $3 es de 12Mod. }
-              }
-            }
-            /halt
-          }
-          elseif ($2 == Voice) { 
-            if ($level($nick) >= 5) || (o isincs $readini( %Chan, $chan, $nick)) { 
-              if ($3 == $null) { /privmsg $nick $1-2 nick } 
-              else {
-                if ($readini( %Chan, $chan, $3) == $null) || (v !isin $readini( %Chan, $chan, $nick)) {
-                  /writeini %Chan $chan $3 v 
-                  $Alicia( Auto, [Access] $nick añadio a $3 como un Voice para la sala $chan)
-                  /privmsg $chan Nivel de12 $3 fue actualizado a 12Voice.
-                }
-                else { /privmsg $chan Nivel de12 $3 es de 12Voice. }
-              }
-            }
-            /halt
-          }
-          elseif ($2 == Borrar) {  
-            if ($level($nick) >= 5) { 
-              if ($3 == $null) { /privmsg $chan $1-2 nick } 
-              else {
-              if ($readini( %Chan, $chan, $3) != $null) {
-                  /remini %Chan $chan $3 
-                  /privmsg $chan Nivel de12 $3 fue Borrado. 
-                  $Alicia( Auto, [Access] $nick borrando a $3 de la sala $chan)
-                }
-                else { /privmsg $nick Nivel de12 $3 es Desconocido. } 
-              }
-            }
-            /halt
-          }
-          else { /privmsg $chan $1 (12Mod/10Voice/04Borrar) nick }
-        }
-      }
-    }
+  if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) || ($nick isop $chan) {
+    /**
+      Aquí puedes poner nuevos comandos, los que ya tenias por ejemplo.
+      */
+
   }
   else {
     if ($me isop $chan) {
       if (%No_Flood == ON) {
-        if ($nick !isvoice $chan) || ($readini( %Chan, $chan, $nick) == $null) {
+        if ($nick !isvoice $chan) || ($readini(%Chan, $chan, $nick) == $null) {
           /inc -u4 %Conteo_De_Flood $+ $nick 1
           if (%Conteo_De_Flood [ $+ [ $nick ] ] >= 6) {
             /ban -u15 $chan $nick 2
@@ -356,7 +454,7 @@ on *:text:*:*: {
 
 
 On 1:invite:#: { 
-  if ($level($nick) >= 5) || (o isin $readini( %Chan, $chan, $nick)) { /join -n $chan } 
+  if ($level($nick) >= 5) || (o isin $readini(%Chan, $chan, $nick)) { /join -n $chan } 
   else { 
     if (%Aviso [ $+ [ $nick ] ] == $null) {
       /set -u30 %Aviso $+ $nick Me invito
@@ -364,12 +462,6 @@ On 1:invite:#: {
     } 
   } 
   $Alicia( Reg, [Invite] me invitaron a en $chan por $nick)
-}
-
-On 1:OP:#: { 
-  if ($opnick == $me) { 
-    if ($banmask iswm $address($me,2)) { /mode $chan -b $banmask } 
-  } 
 }
 
 On *:deop:#:{ 
