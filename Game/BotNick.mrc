@@ -3,14 +3,17 @@
   Actualizado con el tiempo, y mejorado.
   Optimizado de una nueva forma y sin errores.
 
-  El archivo uno.mrc es importante! 
-  Ahí se manejara todos los comandos para los juegos.
+  En el "alias -l Main" puede cambiar:
+    • La Ruta; donde se almanecera los datos. 
+    • La Pass; es importante que la cambies
+        porque con esta clave es que te identificaras como RooT.
+    • El Prefix
   */
 
 alias -l Main {
   /set %file $+(scripts\Juego\,$network,\)
   /set %ajoin $+(%file,ajoin.txt)
-  /set %pass Nosoynadie
+  /set %pass Pass
 
   if ($1 == Main) { 
     /load -rs scripts\Koy.mrc
