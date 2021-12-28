@@ -207,7 +207,7 @@ alias -l Ruta {
   .set %Saldo $+(%Main,Cuenta.txt) 
   .set %Ayudante $+(%Main,Ayudante.txt)
 
-  /set %CanalOficial #Pasado
+  /set %CanalOficial #TuSala
   .set %prefix !
 
   if ($exists(%Main) != $true) { 
