@@ -358,7 +358,7 @@ on *:text:!Baja:*: {
       if ($readini(%Saldo, $nick, Reg) != $null) {
         if ($nick !ison %CanalOficial) {
           /inc -z %Tiempo [ $+ [ $nick ] ] 4
-          /msg $nick [10Baja] 12 $+ $nick $+  Debes ir a %CanalOficial para poder darte de baja =D.
+          /msg $nick 10Baja 12 $+ $nick $+  Debes ir a %CanalOficial para poder darte de baja =D.
         }
         else {
           if ($chan == %CanalOficial) {
@@ -370,10 +370,10 @@ on *:text:!Baja:*: {
             else {
               /remini %Saldo $nick
               /unset %Baja [ $+ [ $nick ] ]
-              /msg $chan [10Baja] 12 $+ $nick $+  Te has dado de baja! Esperamos volverte a ver por aquí =D cuídate!.
+              /msg $chan 10Baja 12 $+ $nick $+  Te has dado de baja! Esperamos volverte a ver por aquí =D cuídate!.
             }
           }
-          else { /msg $nick [10Baja] 12 $+ $nick $+  Debes poner !Baja en %CanalOficial =D. }
+          else { /msg $nick 10Baja 12 $+ $nick $+  Debes poner !Baja en %CanalOficial =D. }
         }
       }
       else { /halt }
