@@ -19,12 +19,12 @@ Es algo fácil...
 #
 ### Modificar el archivo!
 1) Debes cambiar la parte de `%Pass` para que tenga una clave privada, así solo tú tienes acceso a todas las funciones!
-2) Si gustas, puedes cambiar `%Moneda` & `%Moneda_2` a tu gusto, puedes ponerle los nombres que quieras, siempre y cuando siga la logica!
+2) Si gustas, puedes cambiar `%Moneda` & `%Moneda2` a tu gusto, puedes ponerle los nombres que quieras, siempre y cuando siga la logica!
 3) También la ruta, si es que quieres poner el archivo en otra carpeta que no sea `scripts/`.
 4) Cambia el simbolo de `%prefix`, el predestinado es `!`.
 #
 ### Luego de haber modificado el archivo...
-1) Debes poner en el privado de tu bot `/msg botnick !log in Pass`.
+1) Debes poner en el privado de tu bot `/msg TuNickBot !log in Pass`.
 2) Te recuerdo: La clave la puedes cambiar en el archivo. Si crees que es mucho, puedes hacer `/auser tunick 300` desde el mismo Bot.
 3) Luego puedes poner en tu sala `!Juegos enable` para activar los juegos y puedes usar `!Alta` para tener saldo.
 4) Queda en ti usarlo bien!
