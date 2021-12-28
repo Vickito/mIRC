@@ -40,7 +40,7 @@ alias -l Main {
 On *:start: {
   .echo -s  [Archivo] 10Koy Version12 2. Cargado correctamente
   if (%Aviso_load != $null) { 
-    /msg %Aviso_load [10Archivo] $nopath($script) cargado correctamente!
+    /msg %Aviso_load 10Archivo $nopath($script) cargado correctamente!
     /unset %Aviso_*
   }
 }
@@ -233,7 +233,7 @@ alias -l Ruta {
     .writeini %Saldo $2 Moneda2 10 
     .writeini %Saldo $2 BancoMoneda 0 
     .writeini %Saldo $2 BancoMoneda2 0
-    /msg $2 [10Saldo] 12 $+ $2 $+  puedes usar12 %prefix $+ Ayuda en la sala para más información. 
+    /msg $2 10Saldo 12 $+ $2 $+  puedes usar12 %prefix $+ Ayuda en la sala para más información. 
   } 
 
   if ($1 == Ban) { /msg $3 [10Ban] 12 $+ $2 $+  no podes jugar. Si crees que es un error ponte en contacto con un moderador. Usa "12!Ayudante". }
@@ -251,11 +251,11 @@ alias -l Ruta {
   } 
 
   Elseif ($1 == Aviso) { 
-    /msg $2 [10Saldo] 12 $+ $2 $+  No tiene efectivo, si quieres registrarse usa 12!Reg en la sala. $&
+    /msg $2 10Saldo 12 $+ $2 $+  No tiene efectivo, si quieres registrarse usa 12!Reg en la sala. $&
       Le recuerdo que su nick debe de tener el modo 12+r para evitar robos o perdida de saldo. 
   }
-  Elseif ($1 == Avisa) { /msg $3 [10Saldo] 12 $+ $2 $+  No tiene efectivo. }
-  Elseif ($1 == Poco) { /msg $4 [10Saldo] 12 $+ $2 $+  Solo dispones de12 $bytes($readini(%Saldo, $2, $3), b) %Moneda $+ . $5- }
+  Elseif ($1 == Avisa) { /msg $3 10Saldo 12 $+ $2 $+  No tiene efectivo. }
+  Elseif ($1 == Poco) { /msg $4 10Saldo 12 $+ $2 $+  Solo dispones de12 $bytes($readini(%Saldo, $2, $3), b) %Moneda $+ . $5- }
   
   Elseif ($1 == Saldo) {
     if ($3 == Gana) { .writeini %Saldo Bote Gana $2 } 
@@ -272,34 +272,34 @@ On *:text:*!Ayudante*:*: {
     if ($2 == +) || ($2 == -) {
       if ($level($nick) >= 200) {
         if ($2 == +) {
-          if ($readini(%Saldo, $3, OP) == +) { /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] 12 $+ $3 $+  Es un Ayudante. }
+          if ($readini(%Saldo, $3, OP) == +) { /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante 12 $+ $3 $+  Es un Ayudante. }
           else {
             .writeini %Saldo $3 OP +
             .write %Ayudante Ayudante: $3
-            /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] 12 $+ $3 $+  Es un Ayudante (Añadido).
+            /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante 12 $+ $3 $+  Es un Ayudante (Añadido).
             /msg $3 Hola usuario :D eres un Ayudante.
           }
         }
         elseif ($2 == -) {
-          if ($readini(%Saldo, $3, OP) != +) { /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] 12 $+ $3 $+  No es un Ayudante. }
+          if ($readini(%Saldo, $3, OP) != +) { /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante 12 $+ $3 $+  No es un Ayudante. }
           else {
             .remove %Saldo $3 OP
             .write -ds $+ Ayudante: $3 %Ayudante
-            /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] 12 $+ $3 $+  No es un Ayudante (Borrado).
+            /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante 12 $+ $3 $+  No es un Ayudante (Borrado).
           }
         }
       }
     }
     elseif ($2 == $null) {
-      if ($exists(%Ayudante) != $true) { /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] Lo siento, pero no tengo ningun Ayudante. }
+      if ($exists(%Ayudante) != $true) { /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante Lo siento, pero no tengo ningun Ayudante. }
       else { 
-        /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] Tip: Si quieres saber mas sobre un Ayudante, puedes usar "12!Ayudante Nick".
+        /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante Tip: Si quieres saber mas sobre un Ayudante, puedes usar "12!Ayudante Nick".
         .play $nick %Ayudante 1500 
       }
     }
     else {
-      if ($readini(%Saldo, $2, OP) == +) { /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] 12 $+ $2 $+  es un Ayudante. Puedes hacer "12/query $2 $+ " y escribirle.12 $readini(%Saldo, $2, Hora) }
-      else { /msg $iif($nick ison $chan, $chan, $nick) [10Ayudante] 12 $+ $2 $+  No es un Ayudante. Puedes poner "12!Ayudante". Luego asegurarte de colocar bien el nick cuando quieras saber algo. }
+      if ($readini(%Saldo, $2, OP) == +) { /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante 12 $+ $2 $+  es un Ayudante. Puedes hacer "12/query $2 $+ " y escribirle.12 $readini(%Saldo, $2, Hora) }
+      else { /msg $iif($nick ison $chan, $chan, $nick) 10Ayudante 12 $+ $2 $+  No es un Ayudante. Puedes poner "12!Ayudante". Luego asegurarte de colocar bien el nick cuando quieras saber algo. }
     }
     /halt
   }
@@ -358,18 +358,18 @@ on *:text:!Baja:*: {
       if ($readini(%Saldo, $nick, Reg) != $null) {
         if ($nick !ison %CanalOficial) {
           /inc -z %Tiempo [ $+ [ $nick ] ] 4
-          /msg $nick [10Baja] 12 $+ $nick $+  Debes ir a %CanalOficial para poder darte de baja =D.
+          /msg $nick 10Baja 12 $+ $nick $+  Debes ir a %CanalOficial para poder darte de baja =D.
         }
         else {
           /inc -z %Tiempo [ $+ [ $nick ] ] 4
           if (%Baja [ $+ [ $nick ] ] == $null) {
             /set -u30 %Baja [ $+ [ $nick ] ] Borrado preparado.
-            /msg $chan [10Saldo] 12 $+ $nick $+  Seguro que quieres darte de baja? Si es así, vuelve a escribir "12!Baja" por ultima vez! Tienes 30 segundos antes de deshacer todo el comando.
+            /msg $chan 10Saldo 12 $+ $nick $+  Seguro que quieres darte de baja? Si es así, vuelve a escribir "12!Baja" por ultima vez! Tienes 30 segundos antes de deshacer todo el comando.
           }
           else {
             /remini %Saldo $nick
             /unset %Baja [ $+ [ $nick ] ]
-            /msg $chan [10Baja] 12 $+ $nick $+  Te has dado de baja! Esperamos volverte a ver por aquí =D cuídate!.
+            /msg $chan 10Baja 12 $+ $nick $+  Te has dado de baja! Esperamos volverte a ver por aquí =D cuídate!.
           }
         }
       }
@@ -385,7 +385,7 @@ On *:text:*:#: {
       if ($1 == %prefix $+ Alta) { 
         /inc -z %Tiempo [ $+ [ $nick ] ] 4
         if ($2 == $null) { 
-          if ($readini(%Saldo, $nick, Reg) != $null) { /msg $chan [10Saldo] 12 $+ $nick $+  esta Registrado. } 
+          if ($readini(%Saldo, $nick, Reg) != $null) { /msg $chan 10Saldo 12 $+ $nick $+  esta Registrado. } 
           else { $Ruta(Reg, $nick, Reg por $nick $+ : $asctime(dd/mmm/yyyy hh:nnttzzz)) } 
         }
         else { 
@@ -403,7 +403,7 @@ On *:text:*:#: {
         else { 
           $Ruta(Hora, $nick, Saldo)
           if ($2 == $null) || ($2 == $nick) { 
-            /msg $chan [10Saldo] 12 $+ $nick $+  Tienes en efectivo 12 $+ $Ruta(User, $nick, Moneda) $+  %Moneda y 12 $+ $Ruta(User, $nick, Moneda2) $+  %Moneda2 $+ . $&
+            /msg $chan 10Saldo 12 $+ $nick $+  Tienes en efectivo 12 $+ $Ruta(User, $nick, Moneda) $+  %Moneda y 12 $+ $Ruta(User, $nick, Moneda2) $+  %Moneda2 $+ . $&
               En el Banco 12 $+ $Ruta(User, $nick, BancoMoneda) $+  %Moneda y 12 $+ $Ruta(User, $nick, BancoMoneda2) $+  %Moneda2 $+ . $&
               Estado $iif($Ruta(User, $nick, Estado) == Activo, 3Activo, 4Ban) $+ . $&
               $iif($readini(%Saldo, $nick, Botes) != $null, Con un total de 12 $+ $readini(%Saldo, $nick, Botes) $+  Botes., Ningún Bote ganado)
@@ -411,7 +411,7 @@ On *:text:*:#: {
           else { 
             if ($readini(%Saldo, $2, Reg) == $null) { $Ruta(Avisa, $2, $chan) } 
             else {
-              /msg $chan [10Saldo] 12 $+ $2 $+  Tienes en efectivo 12 $+ $Ruta(User, $2, Moneda) $+  %Moneda y 12 $+ $Ruta(User, $2, Moneda2) $+  %Moneda2 $+ . $&
+              /msg $chan 10Saldo 12 $+ $2 $+  Tienes en efectivo 12 $+ $Ruta(User, $2, Moneda) $+  %Moneda y 12 $+ $Ruta(User, $2, Moneda2) $+  %Moneda2 $+ . $&
                 En el Banco 12 $+ $Ruta(User, $2, BancoMoneda) $+  %Moneda y 12 $+ $Ruta(User, $2, BancoMoneda2) $+  %Moneda2 $+ . $&
                 Estado $iif($Ruta(User, $2, Estado) == Activo, 3Activo, 4Ban) $+ . $&
                 $iif($readini(%Saldo, $2, Botes) != $null, Con un total de 12 $+ $readini(%Saldo, $2, Botes) $+  Botes., Ningún Bote ganado)
@@ -423,55 +423,55 @@ On *:text:*:#: {
 
       elseif ($1 == %prefix $+ Depositar) || ($1 == %prefix $+ Ingresar) {
         if ($2 == %Mone:1) { 
-          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan [10Saldo] 12 $+ $nick $+  $1 %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
+          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan 10Saldo 12 $+ $nick $+  $1 %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
           else { 
             if ($readini(%Saldo, $nick, Moneda) >= $3) { 
               $Ruta(Saldo, $nick, BancoMoneda, +, $3) 
               $Ruta(Saldo, $nick, Moneda, -, $3)
-              /msg $chan [10Saldo] 12 $+ $nick $+  has ingresado 12 $+ $bytes($3, b) $+  %Moneda a tu cuenta.
+              /msg $chan 10Saldo 12 $+ $nick $+  has ingresado 12 $+ $bytes($3, b) $+  %Moneda a tu cuenta.
             } 
             else { $Ruta(Poco, $nick, Moneda, $chan) } 
           } 
         }
         elseif ($2 == %Mone:2) { 
-          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan [10Saldo] 12 $+ $nick $+  $1 %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
+          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan 10Saldo 12 $+ $nick $+  $1 %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
           else { 
             if ($readini(%Saldo, $nick, Moneda2) >= $3) { 
               $Ruta(Saldo, $nick, BancoMoneda2, +, $3) 
               $Ruta(Saldo, $nick, Moneda2, -, $3)
-              /msg $chan [10Saldo] 12 $+ $nick $+  has ingresado 12 $+ $bytes($3, b) $+  %Moneda2 a tu cuenta.
+              /msg $chan 10Saldo 12 $+ $nick $+  has ingresado 12 $+ $bytes($3, b) $+  %Moneda2 a tu cuenta.
             } 
             else { $Ruta(Poco, $nick, Moneda2, $chan) } 
           } 
         } 
-        else { /msg $chan [10Saldo] 12 $+ $nick $+  $1 %Moneda $+ / $+ %Moneda2 Cantidad }
+        else { /msg $chan 10Saldo 12 $+ $nick $+  $1 %Moneda $+ / $+ %Moneda2 Cantidad }
         /halt
       }
 
       elseif ($1 == %prefix $+ Sacar) || ($1 == %prefix $+ Retirar) {
         if ($2 == %Mone:1) { 
-          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan [10Saldo] 12 $+ $nick $+  $1 %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
+          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan 10Saldo 12 $+ $nick $+  $1 %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
           else { 
             if ($readini(%Saldo, $nick, BancoMoneda) >= $3) { 
               $Ruta(Saldo, $nick, BancoMoneda, -, $3)
               $Ruta(Saldo, $nick, Moneda, +, $3)
-              /msg $chan [10Saldo] 12 $+ $nick $+  has retirado 12 $+ $bytes($3, b) $+  %Moneda de tu cuenta.
+              /msg $chan 10Saldo 12 $+ $nick $+  has retirado 12 $+ $bytes($3, b) $+  %Moneda de tu cuenta.
             } 
             else { $Ruta(Poco, $nick, BancoMoneda, $chan) } 
           } 
         }
         elseif ($2 == %Mone:2) { 
-          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan [10Saldo] 12 $+ $nick $+  $1 %Moneda2 Cantidad(121 a12 $Ruta(User, $nick, Moneda2) $+ ) } 
+          if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan 10Saldo 12 $+ $nick $+  $1 %Moneda2 Cantidad(121 a12 $Ruta(User, $nick, Moneda2) $+ ) } 
           else { 
             if ($readini(%Saldo, $nick, BancoMoneda2) >= $3) { 
               $Ruta(Saldo, $nick, BancoMoneda2, -, $3)
               $Ruta(Saldo, $nick, Moneda2, +, $3)
-              /msg $chan [10Saldo] 12 $+ $nick $+  has retirado 12 $+ $bytes($3, b) $+  %Moneda2 de tu cuenta.
+              /msg $chan 10Saldo 12 $+ $nick $+  has retirado 12 $+ $bytes($3, b) $+  %Moneda2 de tu cuenta.
             } 
             else { $Ruta(Poco, $nick, BancoMoneda2, $chan) } 
           } 
         } 
-        else { /msg $chan [10Saldo] 12 $+ $nick $+  $1 %Moneda $+ / $+ %Moneda2 Cantidad. }
+        else { /msg $chan 10Saldo 12 $+ $nick $+  $1 %Moneda $+ / $+ %Moneda2 Cantidad. }
         /halt
       }
 
@@ -481,7 +481,7 @@ On *:text:*:#: {
         else { 
           $Ruta(Hora, $nick, Saldo)
           if ($2 == $null) { 
-            /msg $chan [10Bote] 12 $+ $nick $+  El Bote es de 12 $+ $bytes($readini(%Saldo, Bote, Moneda), b) $+  %Moneda y 12 $+ $bytes($readini(%Saldo, Bote, Moneda2), b) $+  %Moneda2 $+ . $&
+            /msg $chan 10Bote 12 $+ $nick $+  El Bote es de 12 $+ $bytes($readini(%Saldo, Bote, Moneda), b) $+  %Moneda y 12 $+ $bytes($readini(%Saldo, Bote, Moneda2), b) $+  %Moneda2 $+ . $&
               $iif($readini(%Saldo, Bote, Gana) != $null, 12 $+ $readini(%Saldo, Bote, Gana) $+  ultimo ganador., No hay ganador del Bote.)
           } 
         }
@@ -496,20 +496,20 @@ On *:text:*:#: {
           if ($2 == $null) { 
             if ($readini(%Saldo, $nick, Estado) == Activo) { .set -u10 %Estado es 03Activo. } 
             else { set -u10 %Estado es 04Ban. } 
-            /msg $chan [10Estado] 12 $+ $nick $+  %Estado
+            /msg $chan 10Estado 12 $+ $nick $+  %Estado
           } 
           else { 
             if ($3 == $null) { 
               if ($readini(%Saldo, $2, Estado) == Activo) { set -u10 %Estado es 03Activo. } 
               else { set -u10 %Estado es 04Ban. } 
-              /msg $chan [10Estado] 12 $+ $2 $+  %Estado
+              /msg $chan 10Estado 12 $+ $2 $+  %Estado
               /unset %Estado
             } 
             else {
               if ($level($nick) >= 200) || ($readini(%Saldo, $nick, OP) == +) { 
-                if ($3 == Unban) { .writeini %Saldo $2 Estado Activo | /msg $chan [10Estado] 12 $+ $nick $+  03Activado para 12 $+ $2 $+ . } 
-                elseif ($3 == Ban) { .writeini %Saldo $2 Estado Ban | /msg $chan [10Estado] 12 $+ $nick $+  04Baneado para 12 $+ $2 $+ . } 
-                else { /msg $chan [10Estado] 12 $+ $nick $+  $1-2 03Unban/04Ban } 
+                if ($3 == Unban) { .writeini %Saldo $2 Estado Activo | /msg $chan 10Estado 12 $+ $nick $+  03Activado para 12 $+ $2 $+ . } 
+                elseif ($3 == Ban) { .writeini %Saldo $2 Estado Ban | /msg $chan 10Estado 12 $+ $nick $+  04Baneado para 12 $+ $2 $+ . } 
+                else { /msg $chan 10Estado 12 $+ $nick $+  $1-2 03Unban/04Ban } 
               } 
             } 
           }
@@ -522,33 +522,33 @@ On *:text:*:#: {
         if ($readini(%Saldo, $nick, Reg) == $null) { $Ruta(Aviso, $nick) }
         else { 
           $Ruta(Hora, $nick, Saldo)
-          if ($2 == $null) || ($2 == $nick) { /msg $chan [10Transferir] 12 $+ $nick $+  $1 Nick %Moneda $+ / $+ %Moneda2 Cantidad }
+          if ($2 == $null) || ($2 == $nick) { /msg $chan 10Transferir 12 $+ $nick $+  $1 Nick %Moneda $+ / $+ %Moneda2 Cantidad }
           else {
             if ($readini(%Saldo, $2, Reg) == $null) { $Ruta(Avisa, $2, $chan) }
             else {
               if ($3 == %Mone:1) { 
-                if ($4 !isnum) || ($4 == 0) || ($4 == $null) { /msg $chan [10Transferir] 12 $+ $nick $+  $1 Nick %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
+                if ($4 !isnum) || ($4 == 0) || ($4 == $null) { /msg $chan 10Transferir 12 $+ $nick $+  $1 Nick %Moneda Cantidad(121 a12 $Ruta(User, $nick, Moneda) $+ ) } 
                 else { 
                   if ($readini(%Saldo, $nick, Moneda) >= $4) { 
                     $Ruta(Saldo, $2, BancoMoneda, +, $4) 
                     $Ruta(Saldo, $nick, Moneda, -, $4)
-                    /msg $chan [10Transferir] 12 $+ $nick $+  has dado a 12 $+ $2 $+  un total de 12 $+ $bytes($4, b) $+  %Moneda $+ .
+                    /msg $chan 10Transferir 12 $+ $nick $+  has dado a 12 $+ $2 $+  un total de 12 $+ $bytes($4, b) $+  %Moneda $+ .
                   } 
                   else { $Ruta(Poco, $nick, Moneda, $chan) } 
                 } 
               }
               elseif ($3 == %Mone:2) { 
-                if ($4 !isnum) || ($4 == 0) || ($4 == $null) { /msg $chan [10Transferir] 12 $+ $nick $+  $1 Nick %Moneda2 Cantidad(121 a12 $Ruta(User, $nick, Moneda2) $+ ) } 
+                if ($4 !isnum) || ($4 == 0) || ($4 == $null) { /msg $chan 10Transferir 12 $+ $nick $+  $1 Nick %Moneda2 Cantidad(121 a12 $Ruta(User, $nick, Moneda2) $+ ) } 
                 else { 
                   if ($readini(%Saldo, $nick, Moneda2) >= $4) { 
                     $Ruta(Saldo, $2, BancoMoneda2, +, $4) 
                     $Ruta(Saldo, $nick, Moneda2, -, $4)
-                    /msg $chan [10Transferir] 12 $+ $nick $+  has dado a 12 $+ $2 $+  un total de 12 $+ $bytes($4, b) $+  %Moneda2 $+ .
+                    /msg $chan 10Transferir 12 $+ $nick $+  has dado a 12 $+ $2 $+  un total de 12 $+ $bytes($4, b) $+  %Moneda2 $+ .
                   } 
                   else { $Ruta(Poco, $nick, Moneda2, $chan) } 
                 } 
               }
-              else { /msg $chan [10Transferir] 12 $+ $nick $+  $1 nick %Moneda $+ / $+ %Moneda2 Cantidad }
+              else { /msg $chan 10Transferir 12 $+ $nick $+  $1 nick %Moneda $+ / $+ %Moneda2 Cantidad }
             }
           }
         }
@@ -561,18 +561,18 @@ On *:text:*:#: {
         else { 
           $Ruta(Hora, $nick, Saldo)
           if ($2 == %Mone:2) { 
-            if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan [10Vender] 12 $+ $nick $+  $1 %Moneda2 Cantidad(121 a12 $Ruta(User, $nick, Moneda2) $+ ) } 
+            if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan 10Vender 12 $+ $nick $+  $1 %Moneda2 Cantidad(121 a12 $Ruta(User, $nick, Moneda2) $+ ) } 
             else { 
               if ($Ruta(User, $nick, Moneda2) >= $3) { 
                 $Ruta(Saldo, $nick, Moneda, +, $calc(%Moneda2_Costo * $3))
                 $Ruta(Saldo, $nick, Moneda2, Saldo, -, $3)
                 $Ruta(Saldo, Bote, Moneda2, +, $3)
-                /msg $chan [10Vender] 12 $+ $nick $+  has vendido un total de 12 $+ $bytes($3, b) $+  %Moneda2 por la cantidad de 12 $+ $bytes($int($calc(%Moneda2_Costo * $3)), b) $+  %Moneda $+ .
+                /msg $chan 10Vender 12 $+ $nick $+  has vendido un total de 12 $+ $bytes($3, b) $+  %Moneda2 por la cantidad de 12 $+ $bytes($int($calc(%Moneda2_Costo * $3)), b) $+  %Moneda $+ .
               } 
               else { $Ruta(Poco, $nick, Moneda, $chan) } 
             } 
           }
-          else { /msg $chan [10Vender] 12 $+ $nick $+  $1 %Moneda2 Cantidad. }
+          else { /msg $chan 10Vender 12 $+ $nick $+  $1 %Moneda2 Cantidad. }
         }
         /halt
       }
@@ -583,19 +583,19 @@ On *:text:*:#: {
         else { 
           $Ruta(Hora, $nick, Saldo)
           if ($2 == %Mone:2) { 
-            if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan [10Comprar] 12 $+ $nick $+  $1-2 Cantidad(1 a 10000) } 
+            if ($3 !isnum) || ($3 == 0) || ($3 == $null) { /msg $chan 10Comprar 12 $+ $nick $+  $1-2 Cantidad(1 a 10000) } 
             else { 
               .set %Comprar_Costo $calc($3 * %Moneda2_Costo)
               if ($Ruta(User, $nick, Moneda) >= %Comprar_Costo) { 
                 $Ruta(Saldo, $nick, Moneda2, +, $3)
                 $Ruta(Saldo, $nick, Moneda, -, %Comprar_Costo)
                 $Ruta(Saldo, Bote, Moneda, +, $3)
-                /msg $chan [10Comprar] 12 $+ $nick $+  has obtenido 12 $+ $bytes($3, b) %Moneda2 $+  por 12 $+ $bytes($int(%Comprar_Costo), b) $+  %Moneda $+ .
+                /msg $chan 10Comprar 12 $+ $nick $+  has obtenido 12 $+ $bytes($3, b) %Moneda2 $+  por 12 $+ $bytes($int(%Comprar_Costo), b) $+  %Moneda $+ .
               }
               else { $Ruta(Poco, $nick, Moneda, $chan, Saldo, Aun te falta 12 $+ $bytes($calc(%Comprar_Costo - $Ruta(User, $nick, Moneda)), b) $+ ) } 
             } 
           }
-          else { /msg $chan [10Comprar] 12 $+ $nick $+  $1 %Moneda2 Cantidad. }
+          else { /msg $chan 10Comprar 12 $+ $nick $+  $1 %Moneda2 Cantidad. }
         }
         /unset %Comprar_Costo | /halt
       }
@@ -610,11 +610,11 @@ On *:text:*:#: {
         else { 
           if ($Ruta(User, $nick, Estado) == Ban) { $Ruta(Ban, $nick, $chan) } 
           else { 
-            if ($readini(%Saldo, $nick, Moneda) < 500) { /msg $chan [10Suerte] 12 $+ $nick $+  necesitas  12 $+ 500 $+  %Moneda $+ . }
+            if ($readini(%Saldo, $nick, Moneda) < 500) { /msg $chan 10Suerte 12 $+ $nick $+  necesitas  12 $+ 500 $+  %Moneda $+ . }
             else { 
               .set %Suerte [ $+ [ $nick ] ] $rand(1, 12) 
               if (%Suerte [ $+ [ $nick ] ] == 1) { 
-                /msg $chan [10Suerte] 12 $+ $nick $+  debe de ser tu dia de suerte, te llevas 12 $+ $bytes($readini(%Saldo, Bote, Moneda), b) $+  %Moneda y 12 $+ $bytes($readini(%Saldo, Bote, Moneda2),b) $+  %Moneda2 $+ .
+                /msg $chan 10Suerte 12 $+ $nick $+  debe de ser tu dia de suerte, te llevas 12 $+ $bytes($readini(%Saldo, Bote, Moneda), b) $+  %Moneda y 12 $+ $bytes($readini(%Saldo, Bote, Moneda2),b) $+  %Moneda2 $+ .
                 $Ruta(Saldo, $nick, Botes, +, 1)
                 $Ruta(Saldo, $nick, Gana) 
                 $Ruta(Saldo, $nick, Moneda, +, $readini(%Saldo, Bote, Moneda)) 
@@ -626,13 +626,13 @@ On *:text:*:#: {
                 .set %SuerteGana [ $+ [ $nick ] ] $rand(200, 800) 
                 $Ruta(Saldo, $nick, Moneda, +, %SuerteGana [ $+ [ $nick ] ])
                 $Ruta(Saldo, Bote, Moneda, +, $calc(%SuerteGana [ $+ [ $nick ] ] / 2))
-                /msg $chan [10Suerte] 12 $+ $nick $+  tuviste suerte, ganas 12 $+ $bytes(%SuerteGana [ $+ [ $nick ] ], b) $+  %Moneda $+ .
+                /msg $chan 10Suerte 12 $+ $nick $+  tuviste suerte, ganas 12 $+ $bytes(%SuerteGana [ $+ [ $nick ] ], b) $+  %Moneda $+ .
               }
               else { 
                 .set %SuerteGana [ $+ [ $nick ] ] $rand(100, 500) 
                 $Ruta(Saldo, $nick, Moneda, -, %SuerteGana [ $+ [ $nick ] ])
                 $Ruta(Saldo, Bote, Moneda, +, %SuerteGana [ $+ [ $nick ] ])
-                /msg $chan [10Suerte] 12 $+ $nick $+  mala suerte, pierdes 12 $+ $bytes(%SuerteGana [ $+ [ $nick ] ], b) $+  %Moneda $+ .
+                /msg $chan 10Suerte 12 $+ $nick $+  mala suerte, pierdes 12 $+ $bytes(%SuerteGana [ $+ [ $nick ] ], b) $+  %Moneda $+ .
               } 
             }
           }
@@ -648,7 +648,7 @@ On *:text:*:#: {
           if ($Ruta(User, $nick, Estado) == Ban) { $Ruta(Ban, $nick, $chan) } 
           else { 
             .set %Regalo [ $+ [ $nick ] ] $rand(50,500)
-            /msg $chan [10Suerte] 12 $+ $nick $+  tu regalo es 12 $+ $bytes(%Regalo [ $+ [ $nick ] ], b) $+  %Moneda $+ .
+            /msg $chan 10Regalo 12 $+ $nick $+  tu regalo es 12 $+ $bytes(%Regalo [ $+ [ $nick ] ], b) $+  %Moneda $+ .
             $Ruta(Saldo, $nick, Moneda, +, %Regalo [ $+ [ $nick ] ]) 
           }
         }
@@ -662,58 +662,58 @@ On *:text:*:#: {
         else { 
           if ($Ruta(User, $nick, Estado) == Ban) { $Ruta(Ban, $nick, $chan) } 
           else { 
-            if ($readini(%Saldo, $nick, Moneda) < 50) { /msg $chan [10Elijo] 12 $+ $nick $+  necesitas 12 $+ 50 $+  %Moneda $+ . }
+            if ($readini(%Saldo, $nick, Moneda) < 50) { /msg $chan 10Elijo 12 $+ $nick $+  necesitas 12 $+ 50 $+  %Moneda $+ . }
             else { 
               if ($2 != $null) { 
                 .set -u10 %Elijo [ $+ [ $nick ] ] $rand(1,3) 
                 if ($2 == Piedra) { 
                   if (%Elijo [ $+ [ $nick ] ] == 1) { 
-                    /msg $chan [10Piedra] 12 $+ $nick $+  sacas 04Piedra y yo 04Piedra, Aupa un empate, y ganas 12 $+ 25 $+  %Moneda $+ .
+                    /msg $chan 10Piedra 12 $+ $nick $+  sacas 04Piedra y yo 04Piedra, Aupa un empate, y ganas 12 $+ 25 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, +, 25)
                   } 
                   elseif (%Elijo [ $+ [ $nick ] ] == 2) { 
-                    /msg $chan [10Piedra] 12 $+ $nick $+  sacas 04Piedra y yo 07Tijeras, ganas 12 $+ 100 $+  %Moneda $+ .
+                    /msg $chan 10Piedra 12 $+ $nick $+  sacas 04Piedra y yo 07Tijeras, ganas 12 $+ 100 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, +, 100)
                   } 
                   elseif (%Elijo [ $+ [ $nick ] ] == 3) { 
-                    /msg $chan [10Piedra] 12 $+ $nick $+  Sacas 04Piedra y yo 12Papel, pierdes 12 $+ 50 $+  %Moneda $+ .
+                    /msg $chan 10Piedra 12 $+ $nick $+  Sacas 04Piedra y yo 12Papel, pierdes 12 $+ 50 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, -, 50)
                     $Ruta(Saldo, Bote, Moneda, +, 50)
                   } 
                 } 
                 elseif ($2 == Papel) { 
                   if (%Elijo [ $+ [ $nick ] ] == 1) { 
-                    /msg $chan [10Papel] 12 $+ $nick $+  sacas 12Papel y yo 12Papel, aupa empate, te doy 12 $+ 30 $+  %Moneda $+ .
+                    /msg $chan 10Papel 12 $+ $nick $+  sacas 12Papel y yo 12Papel, aupa empate, te doy 12 $+ 30 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, +, 30)
                   } 
                   elseif (%Elijo [ $+ [ $nick ] ] == 2) { 
-                    /msg $chan [10Papel] 12 $+ $nick $+  sacas 12Papel y yo 04Piedra, ganas 12 $+ 105 $+  %Moneda $+ .
+                    /msg $chan 10Papel 12 $+ $nick $+  sacas 12Papel y yo 04Piedra, ganas 12 $+ 105 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, +, 105)
                   } 
                   elseif (%Elijo [ $+ [ $nick ] ] == 3) { 
-                    /msg $chan [10Papel] 12 $+ $nick $+  Sacas 12Papel y yo 07Tijeras, pierdes 12 $+ 55 $+  %Moneda $+ .
+                    /msg $chan 10Papel 12 $+ $nick $+  Sacas 12Papel y yo 07Tijeras, pierdes 12 $+ 55 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, -, 55)
                     $Ruta(Saldo, Bote, Moneda, +, 55)
                   } 
                 } 
                 elseif ($2 == Tijeras) { 
                   if (%Elijo [ $+ [ $nick ] ] == 1) { 
-                    /msg $chan [10Tijeras] 12 $+ $nick $+  sacas 07Tijeras y yo 07Tijeras, mmm empate, toma 12 $+ 40 $+  %Moneda $+ .
+                    /msg $chan 10Tijeras 12 $+ $nick $+  sacas 07Tijeras y yo 07Tijeras, mmm empate, toma 12 $+ 40 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, +, 40)
                   } 
                   elseif (%Elijo [ $+ [ $nick ] ] == 2) { 
-                    /msg $chan [10Tijeras] 12 $+ $nick $+  sacas 07Tijeras y yo 12Papel, ganas 12 $+ 110 $+  %Moneda $+ .
+                    /msg $chan 10Tijeras 12 $+ $nick $+  sacas 07Tijeras y yo 12Papel, ganas 12 $+ 110 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, +, 110)
                   } 
                   elseif (%Elijo [ $+ [ $nick ] ] == 3) { 
-                    /msg $chan [10Tijeras] 12 $+ $nick $+  sacas 07Tijeras y yo 04Piedra, pierdes 12 $+ 60 $+  %Moneda $+ .
+                    /msg $chan 10Tijeras 12 $+ $nick $+  sacas 07Tijeras y yo 04Piedra, pierdes 12 $+ 60 $+  %Moneda $+ .
                     $Ruta(Saldo, $nick, Moneda, -, 60)
                     $Ruta(Saldo, Bote, Moneda, +, 60)
                   } 
                 } 
-                else { /msg $chan [10Elijo] 12 $+ $nick $+  $1 12Papel, 07Tijeras o 04Piedra } 
+                else { /msg $chan 10Elijo 12 $+ $nick $+  $1 12Papel, 07Tijeras o 04Piedra } 
               }
-              else { /msg $chan [10Elijo] 12 $+ $nick $+  Lo Siento pero es 12Papel, 07Tijeras o 04Piedra. } 
+              else { /msg $chan 10Elijo 12 $+ $nick $+  Lo Siento pero es 12Papel, 07Tijeras o 04Piedra. } 
             } 
           } 
         }
