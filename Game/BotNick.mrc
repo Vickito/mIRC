@@ -46,29 +46,23 @@ On *:start: {
 }
 On 1:connect: { 
   if (Chateamos isin $network) { 
-    /ghost ProTeo:OtorrinoKoy 
-    /nick ProTeo:OtorrinoKoy 
+    /ghost TuNick:Pass 
+    /nick TuNick:Pass 
     /timer 1 5 .mode Proteo +Rn 
   } 
-  elseif (VicioChat isin $network) {
-    /msg nick recover unu NoRobesLaClave
-    /nick unu 
-    /msg nick identify NoRobesLaClave
-    /mode unu +BI
-  }
-  else { /nick Koy }
+  else { /nick TuNick }
   $Main(ajoin) 
 }
 On 1:disconnect: { 
   /Main
   if ($nick == $me) {
     .unsetall 
-    .mnick ProTeo!OtorrinoKoy 
-    .identd on Vic 
+    .mnick TuNick!Pass 
+    .identd on TuNick 
     .partall 
     .fullname 10Vic12 ©Derechos reservados 1020201-102025
     if (Chateamos isin $server) {
-      /nick ProTeo!OtorrinoKoy 
+      /nick TuNick!Pass 
     }
     if (%Server != $null) {
       .set %Server_irc $replace($server, Terra,irc, Apolo,irc, saturno,irc, jupiter,irc, neptuno,irc, deep,irc, orion,irc)
